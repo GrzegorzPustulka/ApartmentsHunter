@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  worker:
+    build: .
+    command: celery -A hunter.celery_app worker --loglevel=info
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - PYTHONPATH=/app
+
+  beat:
+    build: .
+    command: celery -A hunter.celery_app beat --loglevel=info
+    depends_on:
+      - redis
+      - rabbitmq
+    environment:
+      - PYTHONPATH=/app
+
+  redis:
+    image: "redis:alpine"
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
