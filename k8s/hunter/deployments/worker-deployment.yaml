@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  labels:
+    app: worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker
+  template:
+    metadata:
+      labels:
+        app: worker
+    spec:
+      containers:
+      - name: worker
+        image: localhost:5000/hunter-image:latest
+        command: ["celery", "-A", "hunter.celery_app", "worker", "--loglevel=info"]
+        env:
+        - name: PYTHONPATH
+          value: /app
+        - name: REDIS_URL
+          value: redis://redis:6379
+        - name: RABBITMQ_URL
+          value: amqp://rabbitmq:5672
