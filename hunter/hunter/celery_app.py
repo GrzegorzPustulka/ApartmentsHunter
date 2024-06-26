@@ -1,7 +1,9 @@
 from celery import Celery
 from hunter.config import settings
 
-celery_app = Celery("tasks", broker=settings.rabbitmq_url, backend=settings.redis_url)
+celery_app = Celery(
+    "hunter", broker=settings.rabbit_url, include=["hunter.tasks.periodic_tasks"]
+)
 
 celery_app.conf.update(
     task_serializer="json",

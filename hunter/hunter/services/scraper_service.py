@@ -3,6 +3,9 @@ from bs4.element import ResultSet, Tag
 from hunter.schemas import Apartment
 import requests
 from hunter.config import settings
+import logging
+
+log = logging.getLogger(__name__)
 
 
 class ScraperService:
@@ -25,10 +28,10 @@ class ScraperService:
                         size=self._get_size(listing),
                         city=self.city,
                         district=district,
-                        date=date
+                        date=date,
                     )
                     apartments.append(apartment)
-                except ValueError as e:
+                except ValueError:
                     continue
         return apartments
 
@@ -54,6 +57,7 @@ class ScraperService:
         value = location_and_date_tag.text if location_and_date_tag else ""
 
         if "Odświeżono" in value:
+            log.debug("We are not interested in refreshed offers")
             raise ValueError("We are not interested in refreshed offers")
         try:
             values = value.split(",")
