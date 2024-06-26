@@ -18,7 +18,11 @@ def scrape_and_send(city: str) -> None:
     for offer in offers:
         if not redis.offer_exists("city", offer.link):
             redis.add_offer("city", offer.link)
-            celery_app.send_task('process_offer_in_service_b', args=[offer.model_dump()], queue='service_b_queue')
+            celery_app.send_task(
+                "process_offer_in_service_b",
+                args=[offer.model_dump()],
+                queue="service_b_queue",
+            )
 
             redis.remove_offer("city")
 

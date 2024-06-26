@@ -27,7 +27,9 @@ class Settings(BaseSettings):
     rabbit_host: str = "localhost"
     rabbit_user: str = "guest"
     rabbit_password: SecretStr = SecretStr("guest")
-    rabbit_url: str = f"pyamqp://{rabbit_user}:{rabbit_password.get_secret_value()}@{rabbit_host}//"
+    rabbit_url: str = (
+        f"pyamqp://{rabbit_user}:{rabbit_password.get_secret_value()}@{rabbit_host}//"
+    )
 
 
 @lru_cache()
