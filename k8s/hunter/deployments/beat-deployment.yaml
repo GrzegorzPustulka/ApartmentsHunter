@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beat
+  labels:
+    app: beat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beat
+  template:
+    metadata:
+      labels:
+        app: beat
+    spec:
+      containers:
+      - name: beat
+        image: hunter-image:latest
+        command: ["celery", "-A", "hunter.celery_app", "beat", "--loglevel=info"]
+        env:
+        - name: PYTHONPATH
+          value: /app
+        - name: REDIS_URL
+          value: redis://redis:6379
+        - name: RABBITMQ_URL
+          value: amqp://rabbitmq:5672
