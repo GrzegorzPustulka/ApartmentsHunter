@@ -9,6 +9,8 @@ services:
       - rabbitmq
     environment:
       - PYTHONPATH=/app
+    networks:
+      - hunter_network
 
   beat:
     build: .
@@ -18,12 +20,22 @@ services:
       - rabbitmq
     environment:
       - PYTHONPATH=/app
+    networks:
+      - hunter_network
 
   redis:
     image: "redis:alpine"
+    networks:
+      - hunter_network
 
   rabbitmq:
     image: "rabbitmq:3-management"
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - hunter_network
+
+networks:
+  hunter_network:
+    driver: bridge

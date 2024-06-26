@@ -355,6 +355,16 @@ yaml = ["PyYAML (>=3.10)"]
 zookeeper = ["kazoo (>=2.8.0)"]
 
 [[package]]
+name = "logging"
+version = "0.4.9.6"
+description = "A logging module for Python"
+optional = false
+python-versions = "*"
+files = [
+    {file = "logging-0.4.9.6.tar.gz", hash = "sha256:26f6b50773f085042d301085bd1bf5d9f3735704db9f37c1ce6d8b85c38f2417"},
+]
+
+[[package]]
 name = "prompt-toolkit"
 version = "3.0.47"
 description = "Library for building powerful interactive command lines in Python"
@@ -647,4 +657,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "2c85d271f306e25965e591afdc6ece50a1d5beeef93e86084dea95a9976b5132"
+content-hash = "529db5d34ed1d9a5ce05b60e209df2a6492dcf85c4d04b7156d2ca70c0952cf3"
