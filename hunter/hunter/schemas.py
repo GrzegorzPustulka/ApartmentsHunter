@@ -4,7 +4,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class Apartment(BaseModel):
+class Offer(BaseModel):
     title: str | None = None
     link: str
     city: str
@@ -16,6 +16,10 @@ class Apartment(BaseModel):
     @field_validator("link", mode="before")
     @classmethod
     def validate_title(cls, v: str) -> str:
+        # TODO: In the future, we will introduce Otodom
+        if "otodom" in v:
+            raise ValueError("Otodom not allowed.")
+
         if len(v) > 0:
             return v
         log.error(f"Link is empty: {str(cls)}")
@@ -36,6 +40,23 @@ class Apartment(BaseModel):
     @field_validator("size", mode="before")
     @classmethod
     def validate_size(cls, v: str) -> float | None:
+        if len(v) == 0:
+            return None
+
+        allowed_chars = "0123456789.,"
+        cleaned_price = "".join(char for char in v if char in allowed_chars)
+        cleaned_price = cleaned_price.replace(",", ".")
+        return float(cleaned_price)
+
+
+class DetailsOffer(BaseModel):
+    rent: float | None = None
+    description: str | None = None
+    images_url: list[str]
+
+    @field_validator("rent", mode="before")
+    @classmethod
+    def validate_rent(cls, v: str):
         if len(v) == 0:
             return None
 
