@@ -13,14 +13,14 @@ class DetailsScraperService:
         try:
             return DetailsOffer(
                 rent=self._get_administrative_rent(),
-                images_url = self._get_images_url(),
-                description = self._get_description()
+                images_url=self._get_images_url(),
+                description=self._get_description(),
             )
         except (ValueError, TypeError):
             return
 
     def _get_description(self) -> str:
-        description_div = self.soup.find('div', class_='css-1t507yq er34gjf0')
+        description_div = self.soup.find("div", class_="css-1t507yq er34gjf0")
         return description_div.get_text(strip=True) if description_div else ""
 
     def _get_images_url(self) -> list[str]:

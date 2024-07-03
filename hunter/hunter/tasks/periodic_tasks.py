@@ -20,6 +20,10 @@ def scrape_and_send(city: str) -> None:
         details_scraper = DetailsScraperService(offer.link)
         if details_offer := details_scraper.scrape_offer_details():
             redis.add_offer(city, offer.link)
-            celery_app.send_task('process_offer_in_pricer', args=[details_offer.model_dump(exclude={"images_url"})], queue='pricer_queue')
+            celery_app.send_task(
+                "process_offer_in_pricer",
+                args=[details_offer.model_dump(exclude={"images_url"})],
+                queue="pricer_queue",
+            )
             log.info(f"Sending {offer.link}")
             redis.remove_offer(city)
