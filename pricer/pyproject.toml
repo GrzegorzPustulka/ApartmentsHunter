@@ -11,6 +11,7 @@ celery = "^5.4.0"
 logging = "^0.4.9.6"
 pydantic = "^2.7.4"
 pydantic-settings = "^2.3.4"
+google-generativeai = "^0.7.1"
 
 
 [build-system]
