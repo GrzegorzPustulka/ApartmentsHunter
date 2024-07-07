@@ -53,7 +53,7 @@ class OfferScraperService:
 
     @staticmethod
     def _get_location_and_date(listing: Tag) -> tuple[str, str]:
-        location_and_date_tag = listing.find("p", class_="css-1a4brun")
+        location_and_date_tag = listing.find("p", class_="css-1mwdrlh")
         value = location_and_date_tag.text if location_and_date_tag else ""
 
         if "Odświeżono" in value:
@@ -70,10 +70,10 @@ class OfferScraperService:
 
     @staticmethod
     def _get_price(listing: Tag) -> str:
-        price_tag = listing.find("p", class_="css-tyui9s")
+        price_tag = listing.find("p", class_="css-13afqrm")
         return price_tag.text if price_tag else ""
 
     @staticmethod
     def _get_size(listing: Tag) -> str:
-        size_tag = listing.find("span", class_="css-643j0o")
+        size_tag = listing.find("span", class_="css-1kfqt7f")
         return size_tag.text if size_tag else ""

@@ -1,5 +1,4 @@
 from hunter.celery_app import celery_app
-from hunter.schemas import Offer, DetailsOffer
 from hunter.services.redis_service import RedisService
 from hunter.services.offer_scraper_service import OfferScraperService
 from hunter.services.details_scraper_service import DetailsScraperService
@@ -22,7 +21,11 @@ def scrape_and_send(city: str) -> None:
             redis.add_offer(city, offer.link)
             celery_app.send_task(
                 "process_offer_in_pricer",
-                args=[details_offer.model_dump(exclude={"images_url"})],
+                args=[
+                    details_offer.model_dump(exclude={"images_url"}),
+                    offer.price,
+                    offer.link,
+                ],
                 queue="pricer_queue",
             )
             log.info(f"Sending {offer.link}")

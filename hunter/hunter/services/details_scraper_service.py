@@ -20,7 +20,7 @@ class DetailsScraperService:
             return
 
     def _get_description(self) -> str:
-        description_div = self.soup.find("div", class_="css-1t507yq er34gjf0")
+        description_div = self.soup.find("div", class_="css-1t507yq")
         return description_div.get_text(strip=True) if description_div else ""
 
     def _get_images_url(self) -> list[str]:
