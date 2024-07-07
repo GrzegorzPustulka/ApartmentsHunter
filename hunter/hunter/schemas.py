@@ -51,7 +51,7 @@ class Offer(BaseModel):
 
 class DetailsOffer(BaseModel):
     rent: float | None = None
-    description: str | None = None
+    description: str
     images_url: list[str]
 
     @field_validator("rent", mode="before")

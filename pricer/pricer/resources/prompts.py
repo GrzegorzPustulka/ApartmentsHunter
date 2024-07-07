@@ -1,45 +1,27 @@
 prompt_price_olx = """
-roszę podać szczegółowe dane cenowe, tj. czynsz, czynsz administracyjny, media itp w dokladnym formacie z przykladu
+proszę podać dane cenowe, czyli. czynsz, czynsz administracyjny, media itp w formacie z przykladu
 
-zasady:
-- nie podawaj kaucji
-- jeśli nie ma informacji o ogrzewaniu i wodze to sa wliczone w czynsz administracyjny
-
+zasady jakie wartosci mogą mieć pola:
+- czynsz: kwota lub brak informacji
+- czynsz administracyjny: kwota lub brak informacji
+- prąd: wg zużycia, brak informacji, w cenie czynszu administracyjnego, kwota
+- gaz: wg zuzycia, brak informacji, w cenie czynszu administracyjnego, brak gazu, kwota
+- ogrzewanie: wg zużycia, w cenie czynszu administracyjnego, kwota
+- woda: wg zużycia, w cenie czynszu administracyjnego, kwota
+- internet: brak informacji, we wlasnym zakresie, w cenie czynszu administracyjnego, kwota
+- śmieci: brak informacji, w cenie czynszu administracyjnego, kwota
+- jesli nie ma informacji o wodzie lub ogrzewaniu napisz w cenie czynszu administracyjnego 
 przykład:
 {
     "czynsz": 3500,
     "czynsz_administracyjny": 550,
     "media": {
-        "prąd": {
-            "cena": "wg zużycia",
-            "szacunkowy_koszt": 100
-        }
-        "gaz": {
-            "cena": "brak informacji",
-            "szacunkowy_koszt": null
-        }
-        "ogrzewanie": {
-            "cena": "w cenie czynszu administracyjnego",
-            "szacunkowy_koszt": 100
-        }
-        "woda": {
-            "cena": "w cenie czynszu administracyjnego",
-            "szacunkowy_koszt": 100
-        }
+        "prąd": wg zużycia
+        "gaz": brak gazu
+        "ogrzewanie": w cenie czynszu administracyjnego
+        "woda": w cenie czynszu administracyjnego
     },
-    "inne": {
-        "internet": {
-            "cena": "we wlasnym zakresie",
-            "koszt": null
-        }
-        "śmieci": {
-            "cena": "brak informacji",
-            "koszt": null
-        }
-        "tv": {
-            "cena": "brak informacji",
-            "koszt": null
-        }
-    }
+    "internet": brak informacji
+    "śmieci": w cenie czynszu administracyjnego
 }
 """
