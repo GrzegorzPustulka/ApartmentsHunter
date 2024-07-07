@@ -10,3 +10,6 @@ celery -A hunter.celery_app worker --loglevel=info
 ```bash
 celery -A hunter.celery_app beat --loglevel=info
 ```
+```bash
+celery -A writer.celery_app worker --loglevel=info
+```
