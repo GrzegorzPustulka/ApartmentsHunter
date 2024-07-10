@@ -24,15 +24,19 @@ def scrape_and_send(city: str) -> None:
             redis.add_offer(city, offer.link)
             log.info(f"Sending {offer.link}")
             chain(
-                send_to_pricer.s(details_offer.model_dump(exclude={"images_url"}), offer.price),
-                process_writer.s(offer.model_dump())
+                send_to_pricer.s(
+                    details_offer.model_dump(exclude={"images_url"}), offer.price
+                ),
+                process_writer.s(offer.model_dump()),
             ).apply_async()
             redis.remove_offer(city)
 
 
 @celery_app.task()
 def send_to_pricer(details_offer, price):
-    result = celery_app.send_task('process_offer_in_pricer', args=[details_offer, price], queue='pricer_queue')
+    result = celery_app.send_task(
+        "process_offer_in_pricer", args=[details_offer, price], queue="pricer_queue"
+    )
     return result.id
 
 
@@ -46,7 +50,9 @@ def process_writer(self, pricer_task_id: str, offer: dict[str, Any], retry_count
         if prices is None:
             raise ValueError("Result not ready")
 
-        celery_app.send_task('process_offer_in_writer', args=[prices, offer], queue='writer_queue')
+        celery_app.send_task(
+            "process_offer_in_writer", args=[prices, offer], queue="writer_queue"
+        )
 
     except ValueError:
         if retry_count < 60:

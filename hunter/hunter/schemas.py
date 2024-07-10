@@ -5,7 +5,7 @@ log = logging.getLogger(__name__)
 
 
 class Offer(BaseModel):
-    title: str | None = None
+    title: str
     link: str
     city: str
     district: str

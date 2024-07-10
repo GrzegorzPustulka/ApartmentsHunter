@@ -1,8 +1,10 @@
 from typing import Any
-import json
+from pricer.schemas import PricerSchema
 from pricer.celery_app import celery_app, model
 from pricer.resources.prompts import prompt_price_olx
 import logging
+import json
+
 
 log = logging.getLogger(__name__)
 
@@ -11,15 +13,16 @@ log = logging.getLogger(__name__)
 def process_offer(offer: dict[str, Any], price: float) -> dict[str, Any]:
     message = create_prompt(offer, price)
     response = model.generate_content(message)
-    print(response.text)
-    return response.text
+    response_json = json.loads(response.text)
+    pricer_schemas = PricerSchema(**response_json)
+    return pricer_schemas.model_dump()
 
 
 def create_prompt(offer: dict[str, Any], price: float) -> str:
     return (
         prompt_price_olx
-        + f"DANE:"
-        + f" cena: {price}"
-        + f" czynsz administracyjny: {offer['rent']}"
-        + f" opis: {offer['description']}"
+        + f"DATA:"
+        + f" rent: {price}"
+        + f" administrative rent: {offer['rent']}"
+        + f" description: {offer['description']}"
     )
