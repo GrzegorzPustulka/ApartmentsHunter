@@ -75,5 +75,5 @@ class OfferScraperService:
 
     @staticmethod
     def _get_size(listing: Tag) -> str:
-        size_tag = listing.find("span", class_="css-1kfqt7f")
+        size_tag = listing.find("span", class_="css-643j0o")
         return size_tag.text if size_tag else ""

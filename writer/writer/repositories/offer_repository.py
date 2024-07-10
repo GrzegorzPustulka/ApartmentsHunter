@@ -1,8 +1,19 @@
 from typing import Any
 
+from bson import ObjectId
+
 from writer.db import MongoDBClient
 from writer.config import settings
-from bson import ObjectId
+
+
+class OfferRepositoryCache:
+    _cache = {}
+
+    @classmethod
+    def get_repository(cls, city: str):
+        if city not in cls._cache:
+            cls._cache[city] = OfferRepository(city)
+        return cls._cache[city]
 
 
 class OfferRepository:

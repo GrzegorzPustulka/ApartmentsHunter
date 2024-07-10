@@ -37,20 +37,6 @@ files = [
 ]
 
 [[package]]
-name = "bson"
-version = "0.5.10"
-description = "BSON codec for Python"
-optional = false
-python-versions = "*"
-files = [
-    {file = "bson-0.5.10.tar.gz", hash = "sha256:d6511b2ab051139a9123c184de1a04227262173ad593429d21e443d6462d6590"},
-]
-
-[package.dependencies]
-python-dateutil = ">=2.4.0"
-six = ">=1.9.0"
-
-[[package]]
 name = "celery"
 version = "5.4.0"
 description = "Distributed Task Queue."
@@ -561,4 +547,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "d6298903ac29b1d18718cb1f972d1d2ba77c0ddc061796f29590965986f45d35"
+content-hash = "5bca6b76486cb08b2b530eee89a313b8fc5103edc8c165d0ac5639cacefa79eb"
