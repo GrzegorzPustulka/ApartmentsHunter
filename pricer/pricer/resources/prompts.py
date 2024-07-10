@@ -1,27 +1,27 @@
 prompt_price_olx = """
-proszę podać dane cenowe, czyli. czynsz, czynsz administracyjny, media itp w formacie z przykladu
-
-zasady jakie wartosci mogą mieć pola:
-- czynsz: kwota lub brak informacji
-- czynsz administracyjny: kwota lub brak informacji
-- prąd: wg zużycia, brak informacji, w cenie czynszu administracyjnego, kwota
-- gaz: wg zuzycia, brak informacji, w cenie czynszu administracyjnego, brak gazu, kwota
-- ogrzewanie: wg zużycia, w cenie czynszu administracyjnego, kwota
-- woda: wg zużycia, w cenie czynszu administracyjnego, kwota
-- internet: brak informacji, we wlasnym zakresie, w cenie czynszu administracyjnego, kwota
-- śmieci: brak informacji, w cenie czynszu administracyjnego, kwota
-- jesli nie ma informacji o wodzie lub ogrzewaniu napisz w cenie czynszu administracyjnego 
+Proszę podać dane cenowe, czyli: czynsz, czynsz administracyjny, media itp w formacie z przykładu.
+Zasady jakie wartości mogą mieć pola, nie dodawaj żadnych swoich informacji trzymaj się zasad:
+- rent: dozwolone wartości: [kwota]
+- administrative_rent: dozwolone wartości [kwota]
+- current: dozwolone wartości: [wg zuzycia | brak informacji | w cenie czynszu | kwota]
+- gas: dozwolone wartości: [wg zuzycia | brak informacji | w cenie czynszu | brak gazu | kwota]
+- heating: dozwolone wartości: [wg zuzycia | w cenie czynszu | kwota]
+- water: dozwolone wartości: [wg zuzycia | w cenie czynszu | kwota]
+- internet: dozwolone wartości: [brak informacji | we wlasnym zakresie | w cenie czynszu | kwota]
+- rubbish: dozwolone wartości: [brak informacji | w cenie czynszu | kwota]
+- jeśli nie ma informacji o water lub heating napisz w cenie czynszu 
+- kwoty podawaj jako int lub float
 przykład:
 {
-    "czynsz": 3500,
-    "czynsz_administracyjny": 550,
+    "rent": 3500,
+    "administrative_rent": 550,
     "media": {
-        "prąd": wg zużycia
-        "gaz": brak gazu
-        "ogrzewanie": w cenie czynszu administracyjnego
-        "woda": w cenie czynszu administracyjnego
+        "current": wg zuzycia
+        "gas": brak gazu
+        "heating": w cenie czynszu 
+        "water": w cenie czynszu 
     },
     "internet": brak informacji
-    "śmieci": w cenie czynszu administracyjnego
+    "rubbish": w cenie czynszu 
 }
 """

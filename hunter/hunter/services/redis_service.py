@@ -27,9 +27,9 @@ class RedisService:
     def offer_exists(self, city: str, link: str) -> bool:
         return link in self.get_offers(city)
 
-    def remove_offer(self, city) -> None:
+    def remove_offer(self, city: str) -> None:
         self.client.ltrim(self._create_key(city), 0, settings.redis_offer_limit - 1)
 
     @staticmethod
-    def _create_key(city: str):
+    def _create_key(city: str) -> str:
         return f"offers:{city}"

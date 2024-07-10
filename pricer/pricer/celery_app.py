@@ -5,7 +5,10 @@ from pricer.config import settings
 
 
 celery_app = Celery(
-    "pricer", broker=settings.rabbit_url, backend="redis://localhost", include=["pricer.tasks"]
+    "pricer",
+    broker=settings.rabbit_url,
+    backend="redis://localhost",
+    include=["pricer.tasks"],
 )
 
 default_exchange = Exchange("default", type="direct")
