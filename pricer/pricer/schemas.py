@@ -19,7 +19,7 @@ class Media(BaseModel):
 
 class PricerSchema(BaseModel):
     rent: int | float
-    administrative_rent: int | float
+    administrative_rent: int | float | None = None
     media: Media
     internet: int | float | Internet
     rubbish: int | float | Rubbish

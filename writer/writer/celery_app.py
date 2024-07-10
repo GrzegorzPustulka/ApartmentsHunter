@@ -4,7 +4,10 @@ from writer.config import settings
 
 
 celery_app = Celery(
-    "writer", broker=settings.rabbit_url, backend="redis://localhost", include=["writer.tasks"]
+    "writer",
+    broker=settings.rabbit_url,
+    backend="redis://localhost",
+    include=["writer.tasks"],
 )
 
 default_exchange = Exchange("default", type="direct")

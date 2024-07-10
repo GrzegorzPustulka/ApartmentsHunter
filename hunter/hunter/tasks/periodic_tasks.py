@@ -27,7 +27,7 @@ def scrape_and_send(city: str) -> None:
                 send_to_pricer.s(
                     details_offer.model_dump(exclude={"images_url"}), offer.price
                 ),
-                process_writer.s(offer.model_dump()),
+                process_writer.s(offer.model_dump(exclude={"price"})),
             ).apply_async()
             redis.remove_offer(city)
 
