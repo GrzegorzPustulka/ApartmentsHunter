@@ -1,38 +1,74 @@
 from bson import ObjectId
-from pydantic import BaseModel, Field, model_validator, field_validator, ConfigDict
-from typing import TypeAlias, Literal, Self
+from pydantic import BaseModel, Field, model_validator, field_validator, ValidationInfo
+from typing import TypeAlias, Literal, Self, Any
 
 
-Internet: TypeAlias = Literal["brak informacji", "w cenie czynszu", "we wlasnym zakresie", "wszystko"]
-Rubbish: TypeAlias = Literal["brak informacji", "w cenie czynszu", "wszystko"]
-Current: TypeAlias = Literal["wg zuzycia", "brak informacji", "w cenie czynszu", "wszystko"]
-Gas: TypeAlias = Literal["wg zuzycia", "brak informacji", "w cenie czynszu", "brak gazu", "wszystko"]
-Heating: TypeAlias = Literal["wg zuzycia", "w cenie czynszu", "wszystko"]
-Water: TypeAlias = Literal["wg zuzycia", "w cenie czynszu", "wszystko"]
+Internet: TypeAlias = Literal[
+    "brak informacji", "w cenie czynszu", "we wlasnym zakresie"
+]
+Rubbish: TypeAlias = Literal["brak informacji", "w cenie czynszu"]
+Current: TypeAlias = Literal["wg zuzycia", "brak informacji", "w cenie czynszu"]
+Gas: TypeAlias = Literal[
+    "wg zuzycia", "brak informacji", "w cenie czynszu", "brak gazu"
+]
+Heating: TypeAlias = Literal["wg zuzycia", "w cenie czynszu"]
+Water: TypeAlias = Literal["wg zuzycia", "w cenie czynszu"]
 
 
 class ApartmentParams(BaseModel):
     minimum_price: int | None = None
     maximum_price: int | None = None
-
     minimum_area: int | None = None
     maximum_area: int | None = None
     unknown_area: bool = False
-    current: int | float | Current = "wszystko"
-    heating: int | float | Heating = "wszystko"
-    water: int | float | Water = "wszystko"
-    rubbish: int | float | Rubbish = "wszystko"
-    gas: int | float | Gas = "wszystko"
-    internet: int | float | Internet = "wszystko"
+
+    current: list[str] = Field(default_factory=list)
+    heating: list[str] = Field(default_factory=list)
+    water: list[str] = Field(default_factory=list)
+    rubbish: list[str] = Field(default_factory=list)
+    gas: list[str] = Field(default_factory=list)
+    internet: list[str] = Field(default_factory=list)
+
     city: str
-    district: str | None = None
+    district: list[str] = Field(default_factory=list)
+
+    @field_validator(
+        "current", "heating", "water", "rubbish", "gas", "internet", mode="before"
+    )
+    @classmethod
+    def validate_literal(cls, v: Any, info: ValidationInfo) -> list[str] | int | float:
+        allowed_values = {
+            "current": ["wg zuzycia", "brak informacji", "w cenie czynszu"],
+            "heating": ["wg zuzycia", "w cenie czynszu"],
+            "water": ["wg zuzycia", "w cenie czynszu"],
+            "rubbish": ["brak informacji", "w cenie czynszu"],
+            "gas": ["wg zuzycia", "brak informacji", "w cenie czynszu", "brak gazu"],
+            "internet": ["brak informacji", "w cenie czynszu", "we wlasnym zakresie"],
+        }
+
+        if isinstance(v, list):
+            for item in v:
+                if item not in allowed_values[info.field_name]:
+                    raise ValueError(
+                        f"{item} is not a valid value for {info.field_name}. Allowed values are: {allowed_values[info.field_name]}"
+                    )
+
+        return v
 
     @model_validator(mode="after")
     def validate_price_and_area(self) -> Self:
-        if self.maximum_area and self.minimum_area and self.minimum_area > self.maximum_area:
+        if (
+            self.maximum_area
+            and self.minimum_area
+            and self.minimum_area > self.maximum_area
+        ):
             raise ValueError("Minimum area must be less than maximum area")
 
-        if self.maximum_price and self.maximum_area and self.minimum_price > self.maximum_price:
+        if (
+            self.maximum_price
+            and self.maximum_area
+            and self.minimum_price > self.maximum_price
+        ):
             raise ValueError("Maximum price must be less than minimum area")
 
         return self
@@ -51,7 +87,7 @@ class ApartmentRead(BaseModel):
     link: str
     city: str
     district: str
-    size: int | float | None = None
+    area: int | float | None = None
     rent: int | float
     administrative_rent: int | float | None = None
     media: Media
@@ -62,4 +98,3 @@ class ApartmentRead(BaseModel):
     @classmethod
     def deserialize_objectid(cls, v: ObjectId) -> str:
         return str(v)
-
