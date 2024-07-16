@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class Media(BaseModel):
@@ -9,17 +9,17 @@ class Media(BaseModel):
 
 
 class CreateOffer(BaseModel):
+    model_config = ConfigDict(extra="allow")
     # from Hunter
     title: str
     link: str
     city: str | None = None
     district: str | None = None
     date: str | None = None
-    size: float | None = None
+    area: float | None = None
 
     # from Pricer
-    rent: float
-    administrative_rent: float | None = None
+    price: float
     media: Media
     internet: float | str
     rubbish: float | str

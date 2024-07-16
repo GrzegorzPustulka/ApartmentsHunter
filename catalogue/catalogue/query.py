@@ -30,13 +30,15 @@ class QueryBuilder:
             self.query["price"] = price_query
 
     def add_area_query(self) -> None:
-        if not self.params.unknown_area:
-            area_query = {}
-            if self.params.maximum_area:
-                area_query["$lte"] = self.params.maximum_area
-            if self.params.minimum_area:
-                area_query["$gte"] = self.params.minimum_area
-            if area_query:
+        area_query = {}
+        if self.params.maximum_area:
+            area_query["$lte"] = self.params.maximum_area
+        if self.params.minimum_area:
+            area_query["$gte"] = self.params.minimum_area
+        if area_query:
+            if self.params.unknown_area:
+                self.query["$or"] = [{"area": area_query}, {"area": {"$eq": None}}]
+            else:
                 self.query["area"] = area_query
 
     def add_media(self) -> None:

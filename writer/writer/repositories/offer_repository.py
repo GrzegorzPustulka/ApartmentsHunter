@@ -25,7 +25,7 @@ class OfferRepository:
         return result.inserted_id
 
     def get_offer(self, offer_id: ObjectId) -> dict[str, Any]:
-        return self.collection.find_one({'_id': ObjectId(offer_id)})
+        return self.collection.find_one({"_id": ObjectId(offer_id)})
 
     def get_all_offers(self):
         return list(self.collection.find())

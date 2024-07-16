@@ -7,7 +7,7 @@ celery_app = Celery(
     "writer",
     broker=settings.rabbit_url,
     backend="redis://localhost",
-    include=["writer.tasks"],
+    include=["writer.tasks.tasks"],
 )
 
 default_exchange = Exchange("default", type="direct")
