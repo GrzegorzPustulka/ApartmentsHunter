@@ -2,10 +2,14 @@ from pydantic import BaseModel
 from typing import TypeAlias, Literal
 
 
-Internet: TypeAlias = Literal["brak informacji", "w cenie czynszu", "we wlasnym zakresie"]
+Internet: TypeAlias = Literal[
+    "brak informacji", "w cenie czynszu", "we wlasnym zakresie"
+]
 Rubbish: TypeAlias = Literal["brak informacji", "w cenie czynszu"]
 Current: TypeAlias = Literal["wg zuzycia", "brak informacji", "w cenie czynszu"]
-Gas: TypeAlias = Literal["wg zuzycia", "brak informacji", "w cenie czynszu", "brak gazu"]
+Gas: TypeAlias = Literal[
+    "wg zuzycia", "brak informacji", "w cenie czynszu", "brak gazu"
+]
 Heating: TypeAlias = Literal["wg zuzycia", "w cenie czynszu"]
 Water: TypeAlias = Literal["wg zuzycia", "w cenie czynszu"]
 

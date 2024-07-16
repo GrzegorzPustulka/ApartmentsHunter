@@ -25,7 +25,7 @@ class OfferScraperService:
                         title=self._get_title(listing),
                         link=self._get_url(listing),
                         price=self._get_price(listing),
-                        size=self._get_size(listing),
+                        area=self._get_area(listing),
                         city=self.city,
                         district=district,
                         date=date,
@@ -74,6 +74,6 @@ class OfferScraperService:
         return price_tag.text if price_tag else ""
 
     @staticmethod
-    def _get_size(listing: Tag) -> str:
-        size_tag = listing.find("span", class_="css-643j0o")
-        return size_tag.text if size_tag else ""
+    def _get_area(listing: Tag) -> str:
+        area_tag = listing.find("span", class_="css-643j0o")
+        return area_tag.text if area_tag else ""

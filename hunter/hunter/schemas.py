@@ -11,7 +11,7 @@ class Offer(BaseModel):
     district: str
     date: str
     price: float
-    size: float | None = None
+    area: float | None = None
 
     @field_validator("link", mode="before")
     @classmethod
@@ -37,9 +37,9 @@ class Offer(BaseModel):
         cleaned_price = cleaned_price.replace(",", ".")
         return float(cleaned_price)
 
-    @field_validator("size", mode="before")
+    @field_validator("area", mode="before")
     @classmethod
-    def validate_size(cls, v: str) -> float | None:
+    def validate_area(cls, v: str) -> float | None:
         if len(v) == 0:
             return None
 

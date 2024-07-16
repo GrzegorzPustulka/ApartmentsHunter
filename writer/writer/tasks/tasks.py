@@ -7,6 +7,7 @@ from writer.schemas import CreateOffer
 
 @celery_app.task(name="process_offer_in_writer")
 def process_offer(prices: dict[str, Any], offer: dict[str, Any]) -> None:
+    prices["price"] = prices["rent"] + prices.get("administrative_rent", 0)
     offer = CreateOffer(**prices, **offer)
     repository = OfferRepositoryCache.get_repository(offer.city)
     repository.add_offer(offer.model_dump())
