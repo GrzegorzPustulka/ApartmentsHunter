@@ -43,13 +43,13 @@ class OfferScraperService:
     @staticmethod
     def _get_title(listing: Tag) -> str:
         title_tag = listing.find("a", class_="css-z3gu2d")
-        return title_tag.text if title_tag else ""
+        return title_tag.text
 
     @staticmethod
     def _get_url(listing: Tag) -> str:
         title_tag = listing.find("a", class_="css-z3gu2d")
         prefix = "" if "www.otodom.pl" in title_tag["href"] else "https://www.olx.pl"
-        return prefix + title_tag["href"] if title_tag else ""
+        return prefix + title_tag.get(["href"])
 
     @staticmethod
     def _get_location_and_date(listing: Tag) -> tuple[str, str]:
@@ -71,9 +71,9 @@ class OfferScraperService:
     @staticmethod
     def _get_price(listing: Tag) -> str:
         price_tag = listing.find("p", class_="css-13afqrm")
-        return price_tag.text if price_tag else ""
+        return price_tag.text
 
     @staticmethod
     def _get_area(listing: Tag) -> str:
         area_tag = listing.find("span", class_="css-643j0o")
-        return area_tag.text if area_tag else ""
+        return area_tag.text
