@@ -11,7 +11,7 @@ class Offer(BaseModel):
     district: str
     date: str
     price: float
-    area: float | None = None
+    area: float
 
     @field_validator("link", mode="before")
     @classmethod
@@ -20,29 +20,11 @@ class Offer(BaseModel):
         if "otodom" in v:
             raise ValueError("Otodom not allowed.")
 
-        if len(v) > 0:
-            return v
-        log.error(f"Link is empty: {str(cls)}")
-        raise ValueError("Link cannot be empty.")
+        return v
 
-    @field_validator("price", mode="before")
+    @field_validator("price", "area", mode="before")
     @classmethod
-    def validate_price(cls, v: str) -> int | float:
-        if len(v) == 0:
-            log.error(f"Price is empty: {str(cls)}")
-            raise ValueError("Price cannot be empty.")
-
-        allowed_chars = "0123456789.,"
-        cleaned_price = "".join(char for char in v if char in allowed_chars)
-        cleaned_price = cleaned_price.replace(",", ".")
-        return float(cleaned_price)
-
-    @field_validator("area", mode="before")
-    @classmethod
-    def validate_area(cls, v: str) -> float | None:
-        if len(v) == 0:
-            return None
-
+    def validate_price_and_area(cls, v: str) -> int | float:
         allowed_chars = "0123456789.,"
         cleaned_price = "".join(char for char in v if char in allowed_chars)
         cleaned_price = cleaned_price.replace(",", ".")
@@ -53,6 +35,12 @@ class DetailsOffer(BaseModel):
     rent: float | None = None
     description: str
     images_url: list[str]
+
+    building_type: str
+    number_of_rooms: str
+    floor_level: str | None = None
+    is_furnished: bool
+    is_private_offer: bool
 
     @field_validator("rent", mode="before")
     @classmethod
