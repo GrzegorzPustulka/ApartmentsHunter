@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env")
 
     # RabbitMQ
-    rabbit_host: str = "localhost"
+    rabbit_host: str = "rabbitmq"
     rabbit_user: str = "guest"
     rabbit_password: SecretStr = SecretStr("guest")
     celery_queue: str = "pricer"

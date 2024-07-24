@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  celery_worker:
+    build:
+      context: ./hunter
+      dockerfile: Dockerfile
+    command: poetry run celery -A hunter.celery_app worker --loglevel=info
+    volumes:
+      - ./hunter:/app
+    depends_on:
+      - rabbitmq
+      - redis
+    env_file:
+      - .env
+
+  celery_beat:
+    build:
+      context: ./hunter
+      dockerfile: Dockerfile
+    command: poetry run celery -A hunter.celery_app beat --loglevel=info
+    volumes:
+      - ./hunter:/app
+    depends_on:
+      - rabbitmq
+      - redis
+    env_file:
+      - .env
+
+  celery_worker_pricer:
+    build:
+      context: ./pricer
+      dockerfile: Dockerfile
+    command: poetry run celery -A pricer.celery_app worker --loglevel=info
+    volumes:
+      - ./pricer:/app
+    depends_on:
+      - rabbitmq
+      - redis
+    env_file:
+      - .env
+
+  celery_worker_writer:
+    build:
+      context: ./writer
+      dockerfile: Dockerfile
+    command: poetry run celery -A writer.celery_app worker --loglevel=info
+    volumes:
+      - ./writer:/app
+    depends_on:
+      - rabbitmq
+      - redis
+      - mongo
+    env_file:
+      - .env
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./init.js:/docker-entrypoint-initdb.d/init.js

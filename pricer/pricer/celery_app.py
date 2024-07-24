@@ -7,7 +7,7 @@ from pricer.config import settings
 celery_app = Celery(
     "pricer",
     broker=settings.rabbit_url,
-    backend="redis://localhost",
+    backend="redis://redis:6379/0",
     include=["pricer.tasks"],
 )
 

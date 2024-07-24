@@ -6,7 +6,7 @@ from writer.config import settings
 celery_app = Celery(
     "writer",
     broker=settings.rabbit_url,
-    backend="redis://localhost",
+    backend="redis://redis:6379/0",
     include=["writer.tasks.tasks"],
 )
 

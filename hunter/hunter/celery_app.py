@@ -6,7 +6,7 @@ from hunter.config import settings
 celery_app = Celery(
     "hunter",
     broker=settings.rabbit_url,
-    backend="redis://localhost",
+    backend="redis://redis:6379/0",
     include=["hunter.tasks.periodic_tasks"],
 )
 
