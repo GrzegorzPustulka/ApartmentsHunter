@@ -34,17 +34,17 @@ class DetailsScraperService:
             "floor_level": None,
             "is_furnished": None,
             "is_private_offer": None,
-            "rent": None
+            "rent": None,
         }
 
         mapping = {
-            'Rodzaj zabudowy': 'building_type',
-            'Liczba pokoi': 'number_of_rooms',
-            'Poziom': 'floor_level',
-            'Umeblowane': 'is_furnished',
-            'Prywatne': 'is_private_offer',
-            'Firmowe': 'is_private_offer',
-            'Powierzchnia': 'rent'
+            "Rodzaj zabudowy": "building_type",
+            "Liczba pokoi": "number_of_rooms",
+            "Poziom": "floor_level",
+            "Umeblowane": "is_furnished",
+            "Prywatne": "is_private_offer",
+            "Firmowe": "is_private_offer",
+            "Powierzchnia": "rent",
         }
 
         tags = self.soup.find_all("li", class_="css-1r0si1e")
@@ -53,12 +53,12 @@ class DetailsScraperService:
         for tag in tag_texts:
             for key, detail_key in mapping.items():
                 if key in tag:
-                    if detail_key == 'is_private_offer':
-                        value = True if key == 'Prywatne' else False
-                    elif detail_key == 'is_furnished':
-                        value = True if key == 'Tak' else False
+                    if detail_key == "is_private_offer":
+                        value = True if key == "Prywatne" else False
+                    elif detail_key == "is_furnished":
+                        value = True if key == "Tak" else False
                     else:
-                        value = tag.split(': ')[1] if ': ' in tag else tag
+                        value = tag.split(": ")[1] if ": " in tag else tag
                     details[detail_key] = value
                     break
 

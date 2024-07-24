@@ -21,8 +21,8 @@ def process_offer(offer: dict[str, Any]) -> dict[str, Any]:
 def create_prompt(offer: dict[str, Any]) -> str:
     return (
         prompt_price_olx
-        + f"DATA:"
-        + f" rent: {offer["price"]}"
+        + "DATA:"
+        + f" rent: {offer['price']}"
         + f" administrative rent: {offer['rent']}"
         + f" description: {offer['description']}"
     )
