@@ -52,3 +52,23 @@ class DetailsOffer(BaseModel):
         cleaned_price = "".join(char for char in v if char in allowed_chars)
         cleaned_price = cleaned_price.replace(",", ".")
         return float(cleaned_price)
+
+
+class SchemaForPricer(BaseModel):
+    price: float
+    rent: float | None = None
+    description: str
+
+
+class SchemaForWriter(BaseModel):
+    title: str
+    link: str
+    city: str
+    district: str
+    date: str
+    area: float
+    building_type: str
+    number_of_rooms: str
+    floor_level: str | None = None
+    is_furnished: bool
+    is_private_offer: bool

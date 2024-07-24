@@ -3,6 +3,7 @@ from typing import Any
 from hunter.celery_app import celery_app
 from hunter.services.redis_service import RedisService
 from celery import chain
+from hunter.schemas import SchemaForPricer, SchemaForWriter
 from hunter.services.offer_scraper_service import OfferScraperService
 from hunter.services.details_scraper_service import DetailsScraperService
 import logging
@@ -23,19 +24,21 @@ def scrape_and_send(city: str) -> None:
         if details_offer := details_scraper.scrape_offer_details():
             redis.add_offer(city, offer.link)
             log.info(f"Sending {offer.link}")
+            schema_for_pricer = SchemaForPricer(price=offer.price, **details_offer.model_dump())
+            schema_for_writer = SchemaForWriter(**offer.model_dump(), **details_offer.model_dump())
             chain(
                 send_to_pricer.s(
-                    details_offer.model_dump(exclude={"images_url"}), offer.price
+                    schema_for_pricer.model_dump()
                 ),
-                process_writer.s(offer.model_dump(exclude={"price"})),
+                process_writer.s(schema_for_writer.model_dump()),
             ).apply_async()
             redis.remove_offer(city)
 
 
 @celery_app.task()
-def send_to_pricer(details_offer, price):
+def send_to_pricer(offer: dict[str, Any]):
     result = celery_app.send_task(
-        "process_offer_in_pricer", args=[details_offer, price], queue="pricer_queue"
+        "process_offer_in_pricer", args=[offer], queue="pricer_queue"
     )
     return result.id
 
@@ -46,7 +49,6 @@ def process_writer(self, pricer_task_id: str, offer: dict[str, Any], retry_count
     try:
         result = celery_app.AsyncResult(pricer_task_id)
         prices = result.result
-
         if prices is None:
             raise ValueError("Result not ready")
 
