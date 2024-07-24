@@ -24,12 +24,14 @@ def scrape_and_send(city: str) -> None:
         if details_offer := details_scraper.scrape_offer_details():
             redis.add_offer(city, offer.link)
             log.info(f"Sending {offer.link}")
-            schema_for_pricer = SchemaForPricer(price=offer.price, **details_offer.model_dump())
-            schema_for_writer = SchemaForWriter(**offer.model_dump(), **details_offer.model_dump())
+            schema_for_pricer = SchemaForPricer(
+                price=offer.price, **details_offer.model_dump()
+            )
+            schema_for_writer = SchemaForWriter(
+                **offer.model_dump(), **details_offer.model_dump()
+            )
             chain(
-                send_to_pricer.s(
-                    schema_for_pricer.model_dump()
-                ),
+                send_to_pricer.s(schema_for_pricer.model_dump()),
                 process_writer.s(schema_for_writer.model_dump()),
             ).apply_async()
             redis.remove_offer(city)

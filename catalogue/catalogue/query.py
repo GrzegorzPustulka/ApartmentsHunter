@@ -38,7 +38,7 @@ class QueryBuilder:
         if area_query:
             self.query["area"] = area_query
 
-    def add_media(self) -> None:
+    def add_media_query(self) -> None:
         media_query = {}
         for field in ["current", "heating", "water", "gas"]:
             value = getattr(self.params, field)
@@ -47,9 +47,27 @@ class QueryBuilder:
         if media_query:
             self.query["media"] = media_query
 
-    def add_internet_and_rubbish_district_query(self) -> None:
+    def add_list_queries(self) -> None:
         query = {}
-        for field in ["internet", "rubbish", "district"]:
+        for field in [
+            "internet",
+            "rubbish",
+            "district",
+            "building_type",
+            "floor_level",
+            "number_of_rooms",
+        ]:
             value = getattr(self.params, field)
             if value:
                 query[field] = {"$in": value}
+        if query:
+            self.query["media"] = query
+
+    def add_boolean_queries(self) -> None:
+        query = {}
+        for field in ["is_furnished", "is_private_offer"]:
+            value = getattr(self.params, field)
+            if value:
+                query[field] = {"$eq": value}
+            if query:
+                self.query.update(query)

@@ -3,33 +3,27 @@ from pydantic import BaseModel, Field, model_validator, field_validator, Validat
 from typing import TypeAlias, Literal, Self, Any
 
 
-Internet: TypeAlias = Literal[
-    "brak informacji", "w cenie czynszu", "we wlasnym zakresie"
-]
-Rubbish: TypeAlias = Literal["brak informacji", "w cenie czynszu"]
-Current: TypeAlias = Literal["wg zuzycia", "brak informacji", "w cenie czynszu"]
-Gas: TypeAlias = Literal[
-    "wg zuzycia", "brak informacji", "w cenie czynszu", "brak gazu"
-]
-Heating: TypeAlias = Literal["wg zuzycia", "w cenie czynszu"]
-Water: TypeAlias = Literal["wg zuzycia", "w cenie czynszu"]
-
-
 class ApartmentParams(BaseModel):
+    city: str
+    district: list[str] | None = None
+
     minimum_price: int | None = None
     maximum_price: int | None = None
     minimum_area: int | None = None
     maximum_area: int | None = None
 
-    current: list[str] = Field(default_factory=list)
-    heating: list[str] = Field(default_factory=list)
-    water: list[str] = Field(default_factory=list)
-    rubbish: list[str] = Field(default_factory=list)
-    gas: list[str] = Field(default_factory=list)
-    internet: list[str] = Field(default_factory=list)
+    current: list[str] | None = None
+    heating: list[str] | None = None
+    water: list[str] | None = None
+    gas: list[str] | None = None
+    rubbish: list[str] | None = None
+    internet: list[str] | None = None
 
-    city: str
-    district: list[str] = Field(default_factory=list)
+    building_type: list[str] | None = None
+    number_of_rooms: list[int] | None = None
+    floor_level: list[int] | None = None
+    is_furnished: bool | None = None
+    is_private_offer: bool | None = None
 
     @field_validator(
         "current", "heating", "water", "rubbish", "gas", "internet", mode="before"
@@ -74,10 +68,10 @@ class ApartmentParams(BaseModel):
 
 
 class Media(BaseModel):
-    current: int | float | Current
-    heating: int | float | Heating
-    water: int | float | Water
-    gas: int | float | Gas
+    current: int | float | str
+    heating: int | float | str
+    water: int | float | str
+    gas: int | float | str
 
 
 class ApartmentRead(BaseModel):
@@ -86,12 +80,17 @@ class ApartmentRead(BaseModel):
     link: str
     city: str
     district: str
-    area: int | float | None = None
+    area: int | float
     rent: int | float
-    administrative_rent: int | float | None = None
+    administrative_rent: int | float
+    floor_level: str | None = None
     media: Media
-    rubbish: int | float | Rubbish
-    internet: int | float | Internet
+    rubbish: int | float | str
+    internet: int | float | str
+    building_type: str
+    number_of_rooms: str
+    is_furnished: bool
+    is_private_offer: bool
 
     @field_validator("id", mode="before")
     @classmethod
