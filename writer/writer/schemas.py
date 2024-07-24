@@ -9,14 +9,18 @@ class Media(BaseModel):
 
 
 class CreateOffer(BaseModel):
-    model_config = ConfigDict(extra="allow")
     # from Hunter
     title: str
     link: str
-    city: str | None = None
-    district: str | None = None
-    date: str | None = None
-    area: float | None = None
+    city: str
+    district: str
+    date: str
+    area: float
+    building_type: str
+    number_of_rooms: str
+    floor_level: str | None = None
+    is_furnished: bool
+    is_private_offer: bool
 
     # from Pricer
     price: float

@@ -31,7 +31,8 @@ class OfferScraperService:
                         date=date,
                     )
                     apartments.append(apartment)
-                except (ValueError, TypeError):
+                except (ValueError, TypeError) as e:
+                    log.info(str(e))
                     continue
         return apartments
 
@@ -47,9 +48,9 @@ class OfferScraperService:
 
     @staticmethod
     def _get_url(listing: Tag) -> str:
-        title_tag = listing.find("a", class_="css-z3gu2d")
-        prefix = "" if "www.otodom.pl" in title_tag["href"] else "https://www.olx.pl"
-        return prefix + title_tag.get(["href"])
+        url_tag = listing.find("a", class_="css-z3gu2d")
+        prefix = "" if "www.otodom.pl" in url_tag["href"] else "https://www.olx.pl"
+        return prefix + url_tag["href"] if url_tag else ""
 
     @staticmethod
     def _get_location_and_date(listing: Tag) -> tuple[str, str]:

@@ -10,19 +10,19 @@ log = logging.getLogger(__name__)
 
 
 @celery_app.task(name="process_offer_in_pricer")
-def process_offer(offer: dict[str, Any], price: float) -> dict[str, Any]:
-    message = create_prompt(offer, price)
+def process_offer(offer: dict[str, Any]) -> dict[str, Any]:
+    message = create_prompt(offer)
     response = model.generate_content(message)
     response_json = json.loads(response.text)
     pricer_schemas = PricerSchema(**response_json)
     return pricer_schemas.model_dump()
 
 
-def create_prompt(offer: dict[str, Any], price: float) -> str:
+def create_prompt(offer: dict[str, Any]) -> str:
     return (
         prompt_price_olx
         + f"DATA:"
-        + f" rent: {price}"
+        + f" rent: {offer["price"]}"
         + f" administrative rent: {offer['rent']}"
         + f" description: {offer['description']}"
     )
