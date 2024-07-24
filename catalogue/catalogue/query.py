@@ -36,10 +36,7 @@ class QueryBuilder:
         if self.params.minimum_area:
             area_query["$gte"] = self.params.minimum_area
         if area_query:
-            if self.params.unknown_area:
-                self.query["$or"] = [{"area": area_query}, {"area": {"$eq": None}}]
-            else:
-                self.query["area"] = area_query
+            self.query["area"] = area_query
 
     def add_media(self) -> None:
         media_query = {}

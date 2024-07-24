@@ -18,13 +18,13 @@ class Settings(BaseSettings):
     offer_limit: int = 8
 
     # Redis
-    redis_host: str = "localhost"
+    redis_host: str = "redis"
     redis_port: int = 6379
     redis_db: int = 0
     redis_offer_limit: int = 5
 
     # RabbitMQ
-    rabbit_host: str = "localhost"
+    rabbit_host: str = "rabbitmq"
     rabbit_user: str = "guest"
     rabbit_password: SecretStr = SecretStr("guest")
     rabbit_url: str = (

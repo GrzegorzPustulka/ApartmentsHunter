@@ -20,7 +20,6 @@ class ApartmentParams(BaseModel):
     maximum_price: int | None = None
     minimum_area: int | None = None
     maximum_area: int | None = None
-    unknown_area: bool = False
 
     current: list[str] = Field(default_factory=list)
     heating: list[str] = Field(default_factory=list)
