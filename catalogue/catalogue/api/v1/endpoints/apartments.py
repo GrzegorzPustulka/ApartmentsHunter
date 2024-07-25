@@ -5,7 +5,7 @@ from pymongo.database import Database
 from catalogue.db import get_db
 from catalogue.schemas.apartments import ApartmentParams, ApartmentRead
 
-router = APIRouter(prefix="/v1/apartments", tags=["apartments"])
+router = APIRouter(prefix="/api/v1/apartments", tags=["apartments"])
 
 Session = Annotated[Database, Depends(get_db)]
 
