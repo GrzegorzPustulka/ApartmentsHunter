@@ -55,7 +55,8 @@ class ApartmentParams(BaseModel):
         "water",
         "rubbish",
         "gas",
-        "internet" "building_type",
+        "internet",
+        "building_type",
         mode="before",
     )
     @classmethod
@@ -87,7 +88,7 @@ class ApartmentParams(BaseModel):
 
         return v
 
-    @field_validator("floor_level")
+    @field_validator("floor_level", mode="before")
     @classmethod
     def validate_floor_level(cls, v: Any) -> list[str]:
         result = []
@@ -107,7 +108,7 @@ class ApartmentParams(BaseModel):
         return v
 
     @model_validator(mode="after")
-    def validate_price_and_area(self) -> Self:
+    def validate_price_and_area(self) -> "ApartmentParams":
         if (
             self.maximum_area
             and self.minimum_area
@@ -117,10 +118,10 @@ class ApartmentParams(BaseModel):
 
         if (
             self.maximum_price
-            and self.maximum_area
+            and self.minimum_price
             and self.minimum_price > self.maximum_price
         ):
-            raise ValueError("Maximum price must be less than minimum area")
+            raise ValueError("Maximum price must be less than minimum price")
 
         if self.district and self.city:
             for district in self.district:
@@ -143,8 +144,7 @@ class ApartmentRead(BaseModel):
     city: str
     district: str
     area: int | float
-    rent: int | float
-    administrative_rent: int | float
+    price: int | float
     floor_level: str | None = None
     media: Media
     rubbish: int | float | str

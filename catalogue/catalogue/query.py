@@ -60,8 +60,8 @@ class QueryBuilder:
             value = getattr(self.params, field)
             if value:
                 query[field] = {"$in": value}
-        if query:
-            self.query["media"] = query
+            if query:
+                self.query.update(query)
 
     def add_boolean_queries(self) -> None:
         query = {}
