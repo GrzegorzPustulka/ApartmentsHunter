@@ -58,6 +58,7 @@ class SchemaForPricer(BaseModel):
     price: float
     rent: float | None = None
     description: str
+    images_url: list[str]
 
 
 class SchemaForWriter(BaseModel):

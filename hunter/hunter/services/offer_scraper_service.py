@@ -31,8 +31,7 @@ class OfferScraperService:
                         date=date,
                     )
                     apartments.append(apartment)
-                except (ValueError, TypeError) as e:
-                    log.info(str(e))
+                except (ValueError, TypeError):
                     continue
         return apartments
 
