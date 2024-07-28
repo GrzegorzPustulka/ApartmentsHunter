@@ -20,7 +20,7 @@ class DetailsScraperService:
             return
 
     def _get_description(self) -> str:
-        description_div = self.soup.find("div", class_="css-1t507yq")
+        description_div = self.soup.find("div", class_="css-1o924a9")
         return description_div.get_text(strip=True)
 
     def _get_images_url(self) -> list[str]:
@@ -44,7 +44,7 @@ class DetailsScraperService:
             "Umeblowane": "is_furnished",
             "Prywatne": "is_private_offer",
             "Firmowe": "is_private_offer",
-            "Powierzchnia": "rent",
+            "Czynsz (dodatkowo)": "rent",
         }
 
         tags = self.soup.find_all("li", class_="css-1r0si1e")
@@ -56,7 +56,7 @@ class DetailsScraperService:
                     if detail_key == "is_private_offer":
                         value = True if key == "Prywatne" else False
                     elif detail_key == "is_furnished":
-                        value = True if key == "Tak" else False
+                        value = True if tag == "Umeblowane: Tak" else False
                     else:
                         value = tag.split(": ")[1] if ": " in tag else tag
                     details[detail_key] = value

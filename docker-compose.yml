@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  celery_worker:
+  hunter_worker:
     build:
       context: ./hunter
       dockerfile: Dockerfile
@@ -14,7 +14,7 @@ services:
     env_file:
       - .env
 
-  celery_beat:
+  hunter_beat:
     build:
       context: ./hunter
       dockerfile: Dockerfile
@@ -27,7 +27,7 @@ services:
     env_file:
       - .env
 
-  celery_worker_pricer:
+  pricer:
     build:
       context: ./pricer
       dockerfile: Dockerfile
@@ -40,7 +40,7 @@ services:
     env_file:
       - .env
 
-  celery_worker_writer:
+  writer:
     build:
       context: ./writer
       dockerfile: Dockerfile
