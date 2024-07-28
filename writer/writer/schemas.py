@@ -1,14 +1,13 @@
-from pydantic import BaseModel, ConfigDict
-
-
-class Media(BaseModel):
-    current: int | float | str
-    gas: int | float | str
-    heating: int | float | str
-    water: int | float | str
+from pydantic import BaseModel
 
 
 class CreateOffer(BaseModel):
+    # from Pricer
+    price: float
+    deposit: float | str
+    standard: str
+    bedrooms: int
+
     # from Hunter
     title: str
     link: str
@@ -21,9 +20,3 @@ class CreateOffer(BaseModel):
     floor_level: str | None = None
     is_furnished: bool
     is_private_offer: bool
-
-    # from Pricer
-    price: float
-    media: Media
-    internet: float | str
-    rubbish: float | str
