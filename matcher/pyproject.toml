@@ -1,20 +1,16 @@
 [tool.poetry]
-name = "hunter"
+name = "matcher"
 version = "0.1.0"
 description = ""
-authors = ["Grzegorz Pustułka <kontakt.pustulka@gmail.com>"]
+authors = ["GrzegorzPustulka <grzegorzpustulka@onet.pl>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
+pymongo = "^4.8.0"
+redis = "^5.0.7"
 celery = "^5.4.0"
-pydantic = "^2.7.4"
 pydantic-settings = "^2.3.4"
-requests = "^2.32.3"
-bs4 = "^0.0.2"
-redis = "^5.0.6"
-logging = "^0.4.9.6"
-google = "^3.0.0"
 
 
 [build-system]

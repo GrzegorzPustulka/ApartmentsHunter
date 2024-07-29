@@ -23,4 +23,6 @@ RUN poetry config virtualenvs.create false \
 
 COPY . .
 
-CMD ["poetry", "run", "celery", "--help"]
+ENV PYTHONPATH=/app
+
+CMD ["poetry", "run", "python", "matcher/main.py"]
