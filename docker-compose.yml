@@ -54,6 +54,20 @@ services:
     env_file:
       - .env
 
+  matcher:
+    build:
+      context: ./matcher
+      dockerfile: Dockerfile
+    command: poetry run python matcher/main.py
+    volumes:
+      - ./matcher:/app
+    depends_on:
+      - rabbitmq
+      - redis
+      - mongo-init-replica
+    env_file:
+      - .env
+
   rabbitmq:
     image: rabbitmq:3-management
     ports:
@@ -69,5 +83,20 @@ services:
     image: mongo:latest
     ports:
       - "27017:27017"
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
     volumes:
       - ./init.js:/docker-entrypoint-initdb.d/init.js
+
+  mongo-init-replica:
+    image: mongo:latest
+    depends_on:
+      - mongo
+    entrypoint: >
+      bash -c "
+      echo 'Waiting for MongoDB to start...' &&
+      sleep 30 &&
+      until mongosh --host mongo --eval 'print(\"waited for connection\")'; do sleep 2; done &&
+      mongosh --host mongo --eval 'rs.initiate({_id: \"rs0\", members: [{_id: 0, host: \"mongo:27017\"}]})' &&
+      sleep 5 &&
+      echo 'Replica set initiated'
+      "

@@ -1,21 +1,14 @@
-from pydantic import SecretStr
 from pydantic_settings import BaseSettings
+from pydantic import SecretStr
 from functools import lru_cache
 
 
 class Settings(BaseSettings):
-    # Scraper
-    olx_base_url: str = "https://www.olx.pl/nieruchomosci/mieszkania/wynajem/"
-    cities: list[str] = [
-        "krakow",
-        "warszawa",
-        "poznan",
-        # "wroclaw",
-        # "gdansk",
-        # "katowice",
-    ]
-    offer_offset: int = 2
-    offer_limit: int = 18
+    # mongo
+    mongo_name: str = "catalogue"
+    mongo_port: int = 27017
+    mongo_host: str = "mongo"
+    mongo_uri: str = f"mongodb://{mongo_host}:{mongo_port}/{mongo_name}"
 
     # Redis
     redis_host: str = "redis"
