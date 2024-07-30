@@ -5,6 +5,7 @@ services:
     build:
       context: ./hunter
       dockerfile: Dockerfile
+    container_name: hunter_worker
     command: poetry run celery -A hunter.celery_app worker --loglevel=info
     volumes:
       - ./hunter:/app
@@ -18,6 +19,7 @@ services:
     build:
       context: ./hunter
       dockerfile: Dockerfile
+    container_name: hunter_beat
     command: poetry run celery -A hunter.celery_app beat --loglevel=info
     volumes:
       - ./hunter:/app
@@ -31,6 +33,7 @@ services:
     build:
       context: ./pricer
       dockerfile: Dockerfile
+    container_name: pricer
     command: poetry run celery -A pricer.celery_app worker --loglevel=info
     volumes:
       - ./pricer:/app
@@ -44,6 +47,7 @@ services:
     build:
       context: ./writer
       dockerfile: Dockerfile
+    container_name: writer
     command: poetry run celery -A writer.celery_app worker --loglevel=info
     volumes:
       - ./writer:/app
@@ -58,45 +62,55 @@ services:
     build:
       context: ./matcher
       dockerfile: Dockerfile
+    container_name: matcher
     command: poetry run python matcher/main.py
     volumes:
       - ./matcher:/app
     depends_on:
       - rabbitmq
       - redis
-      - mongo-init-replica
+      - mongo
     env_file:
       - .env
+    entrypoint: >
+      bash -c "
+      while ! curl -s http://mongo:27017 > /dev/null; do
+        echo 'Waiting for MongoDB to be ready...'
+        sleep 5
+      done;
+      echo 'MongoDB is ready. Starting matcher...';
+      exec poetry run python matcher/main.py
+      "
 
   rabbitmq:
     image: rabbitmq:3-management
+    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
 
   redis:
     image: redis:latest
+    container_name: redis
     ports:
       - "6379:6379"
 
   mongo:
     image: mongo:latest
+    container_name: mongo
     ports:
       - "27017:27017"
     command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
-    volumes:
-      - ./init.js:/docker-entrypoint-initdb.d/init.js
 
   mongo-init-replica:
     image: mongo:latest
+    container_name: mongo_init_replica
     depends_on:
       - mongo
     entrypoint: >
       bash -c "
       echo 'Waiting for MongoDB to start...' &&
       sleep 30 &&
-      until mongosh --host mongo --eval 'print(\"waited for connection\")'; do sleep 2; done &&
-      mongosh --host mongo --eval 'rs.initiate({_id: \"rs0\", members: [{_id: 0, host: \"mongo:27017\"}]})' &&
-      sleep 5 &&
+      mongosh --host mongo:27017 --eval 'rs.initiate({_id: \"rs0\", members: [{_id: 0, host: \"mongo:27017\"}]})' &&
       echo 'Replica set initiated'
       "
