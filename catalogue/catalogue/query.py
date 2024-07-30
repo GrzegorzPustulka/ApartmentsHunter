@@ -1,7 +1,9 @@
 from typing import Any
 
-from catalogue.schemas.apartments import ApartmentParams
+from catalogue.schemas.apartment import ApartmentParams
 import inspect
+
+# TODO: Refactor this code
 
 
 def build_query(params: ApartmentParams) -> dict[str, Any]:
@@ -38,24 +40,23 @@ class QueryBuilder:
         if area_query:
             self.query["area"] = area_query
 
-    def add_media_query(self) -> None:
-        media_query = {}
-        for field in ["current", "heating", "water", "gas"]:
-            value = getattr(self.params, field)
-            if value:
-                media_query[field] = {"$in": value}
-        if media_query:
-            self.query["media"] = media_query
+    def add_deposit_query(self) -> None:
+        deposit_query = {}
+        if self.params.deposit:
+            if isinstance(self.params.deposit, list):
+                deposit_query["$in"] = self.params.deposit
+            else:
+                deposit_query["lte"] = self.params.deposit
+        if deposit_query:
+            self.query["deposit"] = deposit_query
 
     def add_list_queries(self) -> None:
         query = {}
         for field in [
-            "internet",
-            "rubbish",
-            "district",
             "building_type",
             "floor_level",
             "number_of_rooms",
+            "district" "bedrooms" "standard",
         ]:
             value = getattr(self.params, field)
             if value:

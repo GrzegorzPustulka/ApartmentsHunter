@@ -3,7 +3,7 @@ from typing import Annotated
 from catalogue.query import build_query
 from pymongo.database import Database
 from catalogue.db import get_db
-from catalogue.schemas.apartments import ApartmentParams, ApartmentRead
+from catalogue.schemas.apartment import ApartmentParams, ApartmentRead
 
 router = APIRouter(prefix="/api/v1/apartments", tags=["apartments"])
 

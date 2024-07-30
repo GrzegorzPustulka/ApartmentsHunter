@@ -25,7 +25,7 @@ class ApartmentParams(BaseModel):
     maximum_price: int | None = None
     minimum_area: int | None = None
     maximum_area: int | None = None
-    maximum_deposit: list[Deposit] | int | None = None
+    deposit: list[Deposit] | int | None = None
 
     building_type: list[BuildingType] | None = None
     number_of_rooms: list[NumberOfRooms] | None = None
