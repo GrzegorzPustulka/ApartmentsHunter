@@ -28,6 +28,7 @@ Zasady jakie wartości mogą mieć pola, nie dodawaj żadnych swoich informacji,
     - kuchnia: nowoczesne meble i urządzenia, często wyposażona w zmywarkę, nowoczesny design
     - ściany: świeżo pomalowane, nowoczesne kolory, brak jakichkolwiek uszkodzeń
 - bedrooms: dozwolone wartości: [liczba]
+    nie traktuj salonu z aneksem kuchennym jako sypilani, ale jesli salon jest nieprzechodni to traktuj jako sypilanie
 - liczby podawaj jako int lub float
 
 Przykład:
