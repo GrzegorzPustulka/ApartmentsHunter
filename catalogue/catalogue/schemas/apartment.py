@@ -14,7 +14,6 @@ BuildingType = Literal[
     "Pozostałe",
 ]
 NumberOfRooms = Literal["1 pokój", "2 pokoje", "3 pokoje", "4 i więcej"]
-Deposit = Literal["brak informacji", "brak kaucji"]
 
 
 class ApartmentParams(BaseModel):
@@ -25,7 +24,7 @@ class ApartmentParams(BaseModel):
     maximum_price: int | None = None
     minimum_area: int | None = None
     maximum_area: int | None = None
-    deposit: list[Deposit] | int | None = None
+    deposit: int | None = None
 
     building_type: list[BuildingType] | None = None
     number_of_rooms: list[NumberOfRooms] | None = None
