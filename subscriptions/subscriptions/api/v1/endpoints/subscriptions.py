@@ -19,6 +19,7 @@ Session = Annotated[Session, Depends(get_db)]
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_offer(subscription: SubscriptionCreate, db: Session):
+    breakpoint()
     sub_repository.create(db, subscription)
 
 

@@ -4,6 +4,7 @@ Zasady jakie wartości mogą mieć pola, nie dodawaj żadnych swoich informacji,
 - rent: dozwolone wartości: [kwota]
 - administrative_rent: dozwolone wartości: [kwota]
 - deposit: dozwolone wartości: [kwota, brak informacji, brak kaucji]
+    jeśli nie ma podanego w ogłoszeniu zwróc deposit: None
 - standard: dozwolone wartości: [niski, normalny, wyższy]
     sugeruj się głównie zdjęciami. Nie bój dawać się standardu niski, kiedy widac ze te meble sa juz przez mlode osoby uwazane jako brzydkie
      ale rowniez kiedy juz jest taki lepszy

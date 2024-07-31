@@ -43,10 +43,7 @@ class QueryBuilder:
     def add_deposit_query(self) -> None:
         deposit_query = {}
         if self.params.deposit:
-            if isinstance(self.params.deposit, list):
-                deposit_query["$in"] = self.params.deposit
-            else:
-                deposit_query["lte"] = self.params.deposit
+            deposit_query["lte"] = self.params.deposit
         if deposit_query:
             self.query["deposit"] = deposit_query
 
