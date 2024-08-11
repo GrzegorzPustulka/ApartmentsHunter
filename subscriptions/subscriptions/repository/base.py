@@ -25,7 +25,7 @@ class BaseRepository(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         ).scalar_one_or_none()
 
     def get_all(self, db: Session) -> list[ModelType] | None:
-        return db.execute(select(self.model)).all()
+        return db.scalars(select(self.model)).all()
 
     # def update(self, db: Session, id: str, obj_in: UpdateSchemaType) -> ModelType:
     #     result = db.execute(

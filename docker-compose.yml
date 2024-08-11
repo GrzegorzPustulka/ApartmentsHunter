@@ -70,6 +70,7 @@ services:
       - rabbitmq
       - redis
       - mongo
+      - postgres
     env_file:
       - .env
     entrypoint: >
@@ -81,6 +82,31 @@ services:
       echo 'MongoDB is ready. Starting matcher...';
       exec poetry run python matcher/main.py
       "
+
+  subscriptions:
+    build:
+      context: ./subscriptions
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    container_name: subscriptions
+    command: bash -c "alembic upgrade head && poetry run uvicorn subscriptions.main:app --host 0.0.0.0 --port 8000 --reload"
+      - ./subscriptions:/app
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
+  postgres:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: SecretPassword
+      POSTGRES_DB: database
+
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -112,5 +138,6 @@ services:
       echo 'Waiting for MongoDB to start...' &&
       sleep 30 &&
       mongosh --host mongo:27017 --eval 'rs.initiate({_id: \"rs0\", members: [{_id: 0, host: \"mongo:27017\"}]})' &&
-      echo 'Replica set initiated'
+      echo 'Replica set initiated' &&
+      tail -f /dev/null
       "

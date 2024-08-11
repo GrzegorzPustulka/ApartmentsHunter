@@ -8,20 +8,20 @@ class Settings(BaseSettings):
     olx_base_url: str = "https://www.olx.pl/nieruchomosci/mieszkania/wynajem/"
     cities: list[str] = [
         "krakow",
-        "warszawa",
-        "poznan",
+        # "warszawa",
+        # "poznan",
         # "wroclaw",
         # "gdansk",
         # "katowice",
     ]
     offer_offset: int = 2
-    offer_limit: int = 18
+    offer_limit: int = 13
 
     # Redis
     redis_host: str = "redis"
     redis_port: int = 6379
     redis_db: int = 0
-    redis_offer_limit: int = 15
+    redis_offer_limit: int = 8
 
     # RabbitMQ
     rabbit_host: str = "rabbitmq"
