@@ -4,7 +4,7 @@ from matcher.config import settings
 from subscriptions.repository.subscription import (
     subscription as subscription_repository,
 )
-from subscriptions.database import SessionLocal
+from matcher.database import SessionLocal
 
 
 class MongoStreamConsumer:
@@ -20,11 +20,13 @@ class MongoStreamConsumer:
     @staticmethod
     def process_change(change: dict[str, Any]) -> None:
         full_document = change.get("fullDocument")
-        with SessionLocal() as session:
-            subs = subscription_repository.get_subscriptions(session)
+        session = SessionLocal()
+        subs = subscription_repository.get_all(session)
 
-            if not subs:
-                return
+        if not subs:
+            return
 
-            for sub in subs:
-                print(sub)
+        for sub in subs:
+            print(sub)
+
+        session.close()

@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     # DATABASE
     db_user: str = "postgres"
     db_password: SecretStr = SecretStr("SecretPassword")
-    db_host: str = "localhost"
+    db_host: str = "postgres"
     db_port: int = 5432
     db_name: str = "database"
 
