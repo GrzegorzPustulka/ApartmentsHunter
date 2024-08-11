@@ -16,6 +16,12 @@ class Base(DeclarativeBase):
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
+    def __repr__(self) -> str:
+        return f"<{self.__class__.__name__}({', '.join(f'{k}={v}' for k, v in self.as_dict().items())})>"
+
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({', '.join(f'{k}={v}' for k, v in self.as_dict().items())})"
+
 
 class Subscription(Base):
     notification_destination: Mapped[str]
