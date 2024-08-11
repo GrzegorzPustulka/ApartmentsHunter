@@ -7,6 +7,7 @@ from subscriptions.repository.subscription import (
 from subscriptions.database import SessionLocal
 from catalogue.schemas.apartment import ApartmentParams
 from catalogue.query import build_query
+from matcher.utils import matches_query
 
 
 class MongoStreamConsumer:
@@ -21,7 +22,7 @@ class MongoStreamConsumer:
 
     @staticmethod
     def process_change(change: dict[str, Any]) -> None:
-        full_document = change.get("fullDocument")
+        record = change.get("fullDocument")
 
         with SessionLocal() as session:
             subs = subscription_repository.get_all(session)
@@ -31,4 +32,6 @@ class MongoStreamConsumer:
             for sub in subs:
                 params = ApartmentParams(**sub.as_dict())
                 query = build_query(params)
-                print(query)
+
+                if matches_query(record, query):
+                    print("ITS WORKS")
