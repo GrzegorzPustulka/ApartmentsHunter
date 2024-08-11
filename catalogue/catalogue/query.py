@@ -53,7 +53,9 @@ class QueryBuilder:
             "building_type",
             "floor_level",
             "number_of_rooms",
-            "district" "bedrooms" "standard",
+            "district",
+            "bedrooms",
+            "standard",
         ]:
             value = getattr(self.params, field)
             if value:
