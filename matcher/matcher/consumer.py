@@ -1,9 +1,10 @@
-from pymongo import MongoClient
 from typing import Any
-from pymongo import MongoClient, database
+from pymongo import MongoClient
 from matcher.config import settings
-from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
-import time
+from subscriptions.repository.subscription import (
+    subscription as subscription_repository,
+)
+from subscriptions.database import SessionLocal
 
 
 class MongoStreamConsumer:
@@ -19,4 +20,11 @@ class MongoStreamConsumer:
     @staticmethod
     def process_change(change: dict[str, Any]) -> None:
         full_document = change.get("fullDocument")
-        print(full_document)
+        with SessionLocal() as session:
+            subs = subscription_repository.get_subscriptions(session)
+
+            if not subs:
+                return
+
+            for sub in subs:
+                print(sub)
