@@ -6,7 +6,7 @@ authors = ["Grzegorz Pustułka <kontakt.pustulka@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-catalogue = { git = "git@github.com:GrzegorzPustulka/ApartmentsHunter.git", branch = "master", subdirectory = "catalogue" }
+catalogue = { git = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git", subdirectory = "catalogue" }
 python = "^3.12"
 uvicorn = "^0.30.1"
 pydantic = "^2.7.4"

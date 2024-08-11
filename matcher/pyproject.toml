@@ -11,6 +11,7 @@ pymongo = "^4.8.0"
 redis = "^5.0.7"
 celery = "^5.4.0"
 pydantic-settings = "^2.3.4"
+subscriptions = { git = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git", subdirectory = "subscriptions" }
 
 
 [build-system]
