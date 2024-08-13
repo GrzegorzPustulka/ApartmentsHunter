@@ -8,6 +8,7 @@ from subscriptions.database import SessionLocal
 from catalogue.schemas.apartment import ApartmentParams
 from catalogue.query import build_query
 from matcher.utils import matches_query
+from matcher.tasks import send_to_sender
 
 
 class MongoStreamConsumer:
@@ -25,13 +26,20 @@ class MongoStreamConsumer:
         record = change.get("fullDocument")
 
         with SessionLocal() as session:
-            subs = subscription_repository.get_all(session)
-            if not subs:
-                return
+            # subs = subscription_repository.get_all(session)
+            # if not subs:
+            #     return
 
-            for sub in subs:
-                params = ApartmentParams(**sub.as_dict())
-                query = build_query(params)
-
-                if matches_query(record, query):
-                    print("ITS WORKS")
+            # for sub in subs:
+            #     params = ApartmentParams(**sub.as_dict())
+            #     query = build_query(params)
+            #
+            #     if matches_query(record, query):
+            #         print("ITS WORKS")
+            # WYSYLAMY TUTAJ
+            data = {
+                "notification_destination": "email",
+                "user_email": "example@gmail.com",
+            }
+            del record["_id"]
+            send_to_sender(record, data)

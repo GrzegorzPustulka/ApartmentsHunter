@@ -31,7 +31,8 @@ class OfferScraperService:
                         date=date,
                     )
                     apartments.append(apartment)
-                except (ValueError, TypeError):
+                except (ValueError, TypeError) as e:
+                    print(e)
                     continue
         return apartments
 
