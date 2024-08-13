@@ -41,6 +41,7 @@ class EmailService:
         Powierzchnia: {data.get('area')} m²
         Typ budynku: {data.get('building_type')}
         Liczba pokoi: {data.get('number_of_rooms')}
+        Liczba sypialni: {data.get('bedrooms')}
         Piętro: {data.get('floor_level', 'Brak danych')}
         Meble: {"Tak" if data.get('is_furnished') else "Nie"}
         Oferta prywatna: {"Tak" if data.get('is_private_offer') else "Nie"}
@@ -65,6 +66,7 @@ class EmailService:
                 <li><strong>Powierzchnia:</strong> {data.get('area')} m²</li>
                 <li><strong>Typ budynku:</strong> {data.get('building_type')}</li>
                 <li><strong>Liczba pokoi:</strong> {data.get('number_of_rooms')}</li>
+                <li><strong>Liczba sypialni:</strong> {data.get('bedrooms')}</li>
                 <li><strong>Piętro:</strong> {data.get('floor_level', 'Brak danych')}</li>
                 <li><strong>Meble:</strong> {"Tak" if data.get('is_furnished') else "Nie"}</li>
                 <li><strong>Oferta prywatna:</strong> {"Tak" if data.get('is_private_offer') else "Nie"}</li>
