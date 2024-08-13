@@ -1,6 +1,6 @@
 from celery import Celery
 from celery.schedules import crontab
-
+from kombu import Exchange, Queue
 from hunter.config import settings
 
 celery_app = Celery(
@@ -14,6 +14,20 @@ celery_app.conf.update(
     timezone="UTC",
     enable_utc=True,
 )
+
+default_exchange = Exchange("hunter", type="direct")
+
+celery_app.conf.task_queues = (
+    Queue("hunter_queue", default_exchange, routing_key="hunter.#"),
+)
+
+celery_app.conf.task_default_queue = "hunter_queue"
+celery_app.conf.task_default_exchange = "hunter"
+celery_app.conf.task_default_routing_key = "hunter.default"
+
+celery_app.conf.task_routes = {
+    "hunter.tasks.periodic_tasks.scrape_and_send": {"queue": "hunter_queue"},
+}
 
 beat_schedule = {}
 for city in settings.cities:

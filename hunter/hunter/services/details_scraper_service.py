@@ -17,6 +17,7 @@ class DetailsScraperService:
                 **self._get_tags(),
             )
         except (ValueError, TypeError) as e:
+            print(e)
             return
 
     def _get_description(self) -> str:

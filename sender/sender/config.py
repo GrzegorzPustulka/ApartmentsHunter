@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     )
 
     # SMTP
-    smtp_server: str = "localhost"
+    smtp_server: str = "mailhog"
     smtp_port: int = 1025
     sender_email: str = "apartments@hunter.com"
     smtp_password: SecretStr = SecretStr("")

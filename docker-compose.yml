@@ -83,6 +83,44 @@ services:
       exec poetry run python matcher/main.py
       "
 
+  matcher_worker:
+    build:
+      context: ./matcher
+      dockerfile: Dockerfile
+    container_name: matcher_worker
+    command: poetry run celery -A matcher.celery_app worker --loglevel=info
+    volumes:
+      - ./matcher:/app
+    depends_on:
+      - rabbitmq
+      - redis
+      - mongo
+      - postgres
+    env_file:
+      - .env
+
+  sender:
+    build:
+      context: ./sender
+      dockerfile: Dockerfile
+    container_name: sender
+    command: poetry run celery -A sender.celery_app worker --loglevel=info
+    volumes:
+      - ./sender:/app
+    depends_on:
+      - mailhog
+      - rabbitmq
+      - redis
+    env_file:
+      - .env
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
   subscriptions:
     build:
       context: ./subscriptions

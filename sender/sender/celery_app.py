@@ -4,23 +4,22 @@ from sender.config import settings
 
 
 celery_app = Celery(
-    "pricer",
+    "sender",
     broker=settings.rabbit_url,
     backend="redis://redis:6379/0",
-    include=["pricer.tasks"],
+    include=["sender.tasks"],
 )
 
-default_exchange = Exchange("default", type="direct")
+sender_exchange = Exchange("sender", type="direct")
 
 celery_app.conf.task_queues = (
-    Queue("default", default_exchange, routing_key="default"),
-    Queue("sender_queue", default_exchange, routing_key="sender_queue"),
+    Queue("sender_queue", sender_exchange, routing_key="sender.#"),
 )
 
-celery_app.conf.task_default_queue = "default"
-celery_app.conf.task_default_exchange = "default"
-celery_app.conf.task_default_routing_key = "default"
+celery_app.conf.task_default_queue = "sender_queue"
+celery_app.conf.task_default_exchange = "sender"
+celery_app.conf.task_default_routing_key = "sender.default"
 
 celery_app.conf.task_routes = {
-    "process_offer_in_sender": {"queue": "sender_queue"},
+    "sender.tasks.process_offer_in_sender": {"queue": "sender_queue"},
 }
