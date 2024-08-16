@@ -6,9 +6,9 @@ Zasady jakie wartości mogą mieć pola, nie dodawaj żadnych swoich informacji,
 - deposit: dozwolone wartości: [kwota, brak informacji, brak kaucji]
     jeśli nie ma podanego w ogłoszeniu zwróc deposit: None
 - standard: dozwolone wartości: [niski, normalny, wyższy]
-    sugeruj się głównie zdjęciami. Nie bój dawać się standardu niski, kiedy widac ze te meble sa juz przez mlode osoby uwazane jako brzydkie
-     ale rowniez kiedy juz jest taki lepszy
-    standard to dac poziom wyższy.
+    Sugeruj się tylko zdjęciami.
+    Nie bój dawać się standardu niski, kiedy widac ze te meble są brzydkie lub przestarzale.
+    Rowniez kiedy zastanawiasz się czy jest to juz standard wyższy to nnie bój dawać się poziomu wyższy.
   - niski:
     - podłoga: w przeciętnym stanie, zazwyczaj jakies staromodne powierzchnie
     - meble: stare, brzydkie, przestarzałe na obecne czasy
@@ -29,7 +29,8 @@ Zasady jakie wartości mogą mieć pola, nie dodawaj żadnych swoich informacji,
     - kuchnia: nowoczesne meble i urządzenia, często wyposażona w zmywarkę, nowoczesny design
     - ściany: świeżo pomalowane, nowoczesne kolory, brak jakichkolwiek uszkodzeń
 - bedrooms: dozwolone wartości: [liczba]
-    nie traktuj salonu z aneksem kuchennym jako sypilani, ale jesli salon jest nieprzechodni to traktuj jako sypilanie
+    ilość sypialni staraj się wyciągać na podstawie opisu, ponieważ na zdjęciach cięzko to ocenic.
+    sypialnia to jest nieprzechodni pokój. wiec salon, salon z aneksem kuchennym to nie jest sypialnia.
 - liczby podawaj jako int lub float
 
 Przykład:
