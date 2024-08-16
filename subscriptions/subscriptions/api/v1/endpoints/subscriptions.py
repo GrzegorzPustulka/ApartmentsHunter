@@ -6,10 +6,10 @@ from subscriptions.schemas.subscriptions import (
     SubscriptionRead,
     SubscriptionUpdate,
 )
-from subscriptions.dependencies import get_db
+from subscriptions.api.v1.dependencies import get_db
 from typing import Annotated
 from sqlalchemy.orm import Session
-from subscriptions.repository.subscription import subscription as sub_repository
+from subscriptions.repository.subscriptions import subscription as sub_repository
 
 
 router = APIRouter(prefix="/subscriptions", tags=["subscriptions"])
