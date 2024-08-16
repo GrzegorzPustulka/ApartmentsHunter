@@ -1,6 +1,12 @@
 from uuid import UUID, uuid4
-from sqlalchemy import String, ARRAY, Integer
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, declared_attr
+from sqlalchemy import String, ARRAY, Integer, ForeignKey
+from sqlalchemy.orm import (
+    DeclarativeBase,
+    Mapped,
+    mapped_column,
+    declared_attr,
+    relationship,
+)
 
 
 class Base(DeclarativeBase):
@@ -11,7 +17,7 @@ class Base(DeclarativeBase):
     @classmethod
     @declared_attr
     def __tablename__(cls) -> str:
-        return cls.__name__.lower()
+        return cls.__name__.lower() + "s"
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
@@ -41,3 +47,16 @@ class Subscription(Base):
     is_private_offer: Mapped[bool | None]
     bedrooms: Mapped[list[int] | None] = mapped_column(ARRAY(Integer))
     standard: Mapped[list[str] | None] = mapped_column(ARRAY(String))
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    user: Mapped["UUID"] = relationship("User", back_populates="subscriptions")
+
+
+class User(Base):
+    email: Mapped[str] = mapped_column(unique=True)
+    password: Mapped[str]
+    subscription_limit: Mapped[int] = mapped_column(default=1)
+
+    subscriptions: Mapped[list["Subscription"]] = relationship(
+        "Subscription", back_populates="user", cascade="all, delete-orphan"
+    )
