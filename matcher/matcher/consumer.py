@@ -1,7 +1,7 @@
 from typing import Any
 from pymongo import MongoClient
 from matcher.config import settings
-from subscriptions.repository.subscription import (
+from subscriptions.repository.subscriptions import (
     subscription as subscription_repository,
 )
 from subscriptions.database import SessionLocal
