@@ -14,6 +14,7 @@ BuildingType = Literal[
     "Pozostałe",
 ]
 NumberOfRooms = Literal["1 pokój", "2 pokoje", "3 pokoje", "4 i więcej"]
+Standard = Literal["niski", "normalny", "wysoki"]
 
 
 class ApartmentParams(BaseModel):
@@ -33,7 +34,7 @@ class ApartmentParams(BaseModel):
     is_private_offer: bool | None = None
 
     bedrooms: list[int] | None = None
-    standard: list[str] | None = None
+    standard: list[Standard] | None = None
 
     @model_validator(mode="after")
     def validate_price_and_area(self) -> "ApartmentParams":
