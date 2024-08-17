@@ -2,7 +2,7 @@ from typing import Generic, Type, TypeVar
 
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from sqlalchemy import insert, select
+from sqlalchemy import insert, select, delete
 
 from subscriptions.models import Base
 
@@ -27,6 +27,10 @@ class BaseRepository(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def get_all(self, db: Session) -> list[ModelType] | None:
         return db.query(self.model).all()
 
+    def delete_by_id(self, db: Session, id: str) -> None:
+        db.execute(delete(self.model).where(self.model.id == id))
+        db.commit()
+
     # def update(self, db: Session, id: str, obj_in: UpdateSchemaType) -> ModelType:
     #     result = db.execute(
     #         update(self.model)
@@ -36,17 +40,3 @@ class BaseRepository(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     #     )
     #     db.commit()
     #     return result.scalar_one()
-
-    # def remove(self, db: Session, id: str) -> ModelType:
-    #     try:
-    #         result = db.execute(
-    #             delete(self.model).where(self.model.id == id).returning(self.model)
-    #         )
-    #         db.commit()
-    #         return result.scalar_one()
-    #     except IntegrityError:
-    #         db.rollback()
-    #         raise HTTPException(
-    #             status_code=status.HTTP_409_CONFLICT,
-    #             detail="Cannot delete the record due to associated records in other tables.",
-    #         )
