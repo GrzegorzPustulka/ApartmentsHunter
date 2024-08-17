@@ -1,24 +1,22 @@
 from uuid import UUID
 
-from fastapi import APIRouter, status, Depends, HTTPException
+from fastapi import APIRouter, status, HTTPException
 from subscriptions.schemas.subscriptions import (
     SubscriptionCreate,
     SubscriptionRead,
     SubscriptionUpdate,
 )
-from subscriptions.api.v1.dependencies import get_db
-from typing import Annotated
-from sqlalchemy.orm import Session
+from subscriptions.api.v1.dependencies import DB, CurrentUser
 from subscriptions.repository.subscriptions import subscription as sub_repository
 
 
 router = APIRouter(prefix="/subscriptions", tags=["subscriptions"])
 
-Session = Annotated[Session, Depends(get_db)]
-
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_offer(subscription: SubscriptionCreate, db: Session):
+async def create_offer(
+    current_user: CurrentUser, subscription: SubscriptionCreate, db: DB
+):
     sub_repository.create(db, subscription)
 
 
@@ -27,7 +25,7 @@ async def create_offer(subscription: SubscriptionCreate, db: Session):
     response_model=SubscriptionRead,
     status_code=status.HTTP_200_OK,
 )
-async def read_subscription(subscription_id: UUID, db: Session) -> SubscriptionRead:
+async def read_subscription(subscription_id: UUID, db: DB) -> SubscriptionRead:
     sub = sub_repository.get_by_id(db, subscription_id)
 
     if not sub:
@@ -36,18 +34,3 @@ async def read_subscription(subscription_id: UUID, db: Session) -> SubscriptionR
             detail=f"Subscription with id '{subscription_id}' not found.",
         )
     return SubscriptionRead.model_validate(sub.as_dict())
-
-
-@router.get("/", response_model=list[SubscriptionRead])
-async def read_subscriptions(db: Session):
-    pass
-
-
-@router.put("/{subscription_id}", response_model=SubscriptionRead)
-async def update_subscription(subscription_id: UUID, subscription: SubscriptionUpdate):
-    pass
-
-
-@router.delete("/{subscription_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_subscription(subscription_id: UUID, db: Session):
-    pass
