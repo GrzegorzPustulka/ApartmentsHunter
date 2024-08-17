@@ -1,7 +1,6 @@
 from fastapi.security import OAuth2PasswordRequestForm
 
-from subscriptions.api.v1.dependencies import get_db
-from sqlalchemy.orm import Session
+from subscriptions.api.v1.dependencies import DB
 from fastapi import APIRouter, Depends, HTTPException, status
 from subscriptions.schemas.users import UserCreate, Token
 from subscriptions.repository.users import user as user_repository
@@ -12,11 +11,9 @@ from datetime import timedelta
 
 router = APIRouter(prefix="/users", tags=["users"])
 
-Session = Annotated[Session, Depends(get_db)]
-
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_offer(user_in: UserCreate, db: Session):
+async def create_user(user_in: UserCreate, db: DB):
     user = user_repository.get_by_email(db, email=user_in.email)
 
     if user:
@@ -30,7 +27,7 @@ async def create_offer(user_in: UserCreate, db: Session):
 
 @router.post("/access-token")
 def login_access_token(
-    db: Session, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
+    db: DB, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ) -> Token:
     user = user_repository.authenticate(
         db, email=form_data.username, password=form_data.password
