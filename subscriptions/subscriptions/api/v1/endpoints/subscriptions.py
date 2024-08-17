@@ -17,7 +17,14 @@ router = APIRouter(prefix="/subscriptions", tags=["subscriptions"])
 async def create_offer(
     current_user: CurrentUser, subscription: SubscriptionCreate, db: DB
 ):
-    sub_repository.create(db, subscription)
+    active_subscriptions = sub_repository.get_by_user_id(db, current_user.id)
+    if len(active_subscriptions) >= current_user.subscription_limit:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Subscription limit exceeded.",
+        )
+
+    sub_repository.create_subscription(db, subscription, current_user.id)
 
 
 @router.get(
@@ -25,7 +32,9 @@ async def create_offer(
     response_model=SubscriptionRead,
     status_code=status.HTTP_200_OK,
 )
-async def read_subscription(subscription_id: UUID, db: DB) -> SubscriptionRead:
+async def read_subscription(
+    current_user: CurrentUser, subscription_id: UUID, db: DB
+) -> SubscriptionRead:
     sub = sub_repository.get_by_id(db, subscription_id)
 
     if not sub:
@@ -33,4 +42,9 @@ async def read_subscription(subscription_id: UUID, db: DB) -> SubscriptionRead:
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Subscription with id '{subscription_id}' not found.",
         )
+    if sub.user_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Not enough permissions."
+        )
+
     return SubscriptionRead.model_validate(sub.as_dict())
