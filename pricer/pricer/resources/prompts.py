@@ -8,7 +8,7 @@ Zasady jakie wartości mogą mieć pola, nie dodawaj żadnych swoich informacji,
 - standard: dozwolone wartości: [niski, normalny, wyższy]
     Sugeruj się tylko zdjęciami.
     Nie bój dawać się standardu niski, kiedy widac ze te meble są brzydkie lub przestarzale.
-    Rowniez kiedy zastanawiasz się czy jest to juz standard wyższy to nnie bój dawać się poziomu wyższy.
+    Rowniez kiedy zastanawiasz się czy jest to juz standard wysoki to nnie bój dawać się poziomu wysoki.
   - niski:
     - podłoga: w przeciętnym stanie, zazwyczaj jakies staromodne powierzchnie
     - meble: stare, brzydkie, przestarzałe na obecne czasy
@@ -21,7 +21,7 @@ Zasady jakie wartości mogą mieć pola, nie dodawaj żadnych swoich informacji,
     - łazienka: w dobrym stanie, standardowe urządzenia, czyste i funkcjonalne
     - kuchnia: w dobrym stanie, standardowe urządzenia, mogą być starsze, ale funkcjonalne
     - ściany: w dobrym stanie, pomalowane, brak widocznych uszkodzeń
-  - wyższy:
+  - wysoki:
     - wyposażenie: nowoczesne, wysokiej jakości
     - podłoga: w bardzo dobrym stanie, często nowe lub odnowione
     - meble: w bardzo ładnym stanie, nowoczesne, stylowe
