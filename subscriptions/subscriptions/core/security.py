@@ -1,4 +1,17 @@
 import bcrypt
+import jwt
+from typing import Any
+from subscriptions.core.config import settings
+from datetime import datetime, timedelta, timezone
+
+
+def create_access_token(subject: str | Any, expires_delta: timedelta) -> str:
+    expire = datetime.now(timezone.utc) + expires_delta
+    to_encode = {"exp": expire, "sub": str(subject)}
+    encoded_jwt = jwt.encode(
+        to_encode, settings.secret_key, algorithm=settings.algorithm
+    )
+    return encoded_jwt
 
 
 def get_password_hash(password: str) -> str:

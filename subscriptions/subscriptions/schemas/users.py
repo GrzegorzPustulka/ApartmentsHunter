@@ -14,3 +14,8 @@ class UserUpdate(UserCreate):
 class UserRead(UserCreate):
     id: UUID
     subscription_limit: int
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
