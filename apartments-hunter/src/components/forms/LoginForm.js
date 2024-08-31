@@ -2,20 +2,23 @@ import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 function LoginForm() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const formik = useFormik({
     initialValues: {
-      email: '',
+      username: '',
       password: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().email('Invalid email address').required('Required'),
+      username: Yup.string().required('Required'),
       password: Yup.string().min(6, 'Must be 6 characters or more').required('Required'),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
+      await login(values.username, values.password);
       navigate('/dashboard');
     },
   });
@@ -24,15 +27,15 @@ function LoginForm() {
     <form onSubmit={formik.handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-96">
       <h2 className="text-2xl font-bold mb-6 text-center">Logowanie</h2>
       <div className="mb-4">
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+        <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>  {/* Zmiana na `username` */}
         <input
-          id="email"
-          type="email"
-          {...formik.getFieldProps('email')}
+          id="username"
+          type="text"
+          {...formik.getFieldProps('username')}
           className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
         />
-        {formik.touched.email && formik.errors.email ? (
-          <div className="text-red-500 text-sm">{formik.errors.email}</div>
+        {formik.touched.username && formik.errors.username ? (
+          <div className="text-red-500 text-sm">{formik.errors.username}</div>
         ) : null}
       </div>
       <div className="mb-6">
