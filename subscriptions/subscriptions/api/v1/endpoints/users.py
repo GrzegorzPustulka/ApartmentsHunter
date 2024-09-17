@@ -12,7 +12,7 @@ from datetime import timedelta
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("/register", status_code=status.HTTP_201_CREATED)
 async def create_user(user_in: UserCreate, db: DB):
     user = user_repository.get_by_email(db, email=user_in.email)
 
