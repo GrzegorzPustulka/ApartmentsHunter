@@ -1,410 +1,387 @@
 import { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
+import { useNavigate, Link } from 'react-router-dom';
+import { FaArrowRight, FaArrowLeft, FaCheck, FaHome } from 'react-icons/fa';
 
 function CreateSubscriptionPage() {
   const { token } = useContext(AuthContext);
   const [step, setStep] = useState(1);
-  const [city, setCity] = useState('');
-  const [districts, setDistricts] = useState([]);
-  const [selectedDistricts, setSelectedDistricts] = useState([]);
-  const [selectedBuildingTypes, setSelectedBuildingTypes] = useState([]);
-  const [selectedRooms, setSelectedRooms] = useState([]);
-  const [selectedStandards, setSelectedStandards] = useState([]);
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
-  const [minArea, setMinArea] = useState('');
-  const [maxArea, setMaxArea] = useState('');
-  const [maxDeposit, setMaxDeposit] = useState('');
-  const [floor, setFloor] = useState('');
-  const [isFurnished, setIsFurnished] = useState(false);
-  const [isPrivateOffer, setIsPrivateOffer] = useState(false);
-  const [bedrooms, setBedrooms] = useState('');
+  const [formData, setFormData] = useState({
+    city: '',
+    districts: [],
+    buildingTypes: [],
+    rooms: [],
+    standards: [],
+    minPrice: '',
+    maxPrice: '',
+    minArea: '',
+    maxArea: '',
+    maxDeposit: '',
+    floor: '',
+    isFurnished: false,
+    isPrivateOffer: false,
+    bedrooms: '',
+  });
   const navigate = useNavigate();
 
   const districtOptions = {
     Warszawa: ['Śródmieście', 'Mokotów', 'Wola', 'Praga Południe', 'Bielany'],
-    Kraków: [
-        "Bieńczyce",
-        "Bieżanów-Prokocim",
-        "Bronowice",
-        "Czyżyny",
-        "Dębniki",
-        "Grzegórzki",
-        "Krowodrza",
-        "Łagiewniki-Borek Fałęcki",
-        "Mistrzejowice",
-        "Nowa Huta",
-        "Podgórze",
-        "Podgórze Duchackie",
-        "Prądnik Biały",
-        "Prądnik Czerwony",
-        "Stare Miasto",
-        "Swoszowice",
-        "Wzgórza Krzesławickie",
-        "Zwierzyniec",
-    ],
+    Kraków: ["Stare Miasto", "Grzegórzki", "Prądnik Czerwony", "Prądnik Biały", "Krowodrza", "Bronowice", "Zwierzyniec", "Dębniki", "Łagiewniki-Borek Fałęcki", "Swoszowice", "Podgórze Duchackie", "Bieżanów-Prokocim", "Podgórze", "Czyżyny", "Mistrzejowice", "Bieńczyce", "Wzgórza Krzesławickie", "Nowa Huta"],
     Wrocław: ['Krzyki', 'Psie Pole', 'Śródmieście', 'Fabryczna'],
   };
 
-  const buildingTypes = [
-    "Blok",
-    "Kamienica",
-    "Dom wolnostojący",
-    "Szeregowiec",
-    "Apartamentowiec",
-    "Loft",
-    "Pozostałe"
-  ];
-
+  const buildingTypes = ["Blok", "Kamienica", "Dom wolnostojący", "Szeregowiec", "Apartamentowiec", "Loft", "Pozostałe"];
   const roomOptions = ["1 pokój", "2 pokoje", "3 pokoje", "4 i więcej"];
   const standardOptions = ["niski", "normalny", "wysoki"];
 
-  const handleCityChange = (e) => {
-    const selectedCity = e.target.value;
-    setCity(selectedCity);
-    setDistricts(districtOptions[selectedCity] || []);
-    setSelectedDistricts([]);
-    setStep(2);
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
   };
 
-  const handleCheckboxChange = (setter, value) => {
-    setter((prevSelected) =>
-      prevSelected.includes(value)
-        ? prevSelected.filter((item) => item !== value)
-        : [...prevSelected, value]
-    );
+  const handleArrayInputChange = (name, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [name]: prev[name].includes(value)
+        ? prev[name].filter(item => item !== value)
+        : [...prev[name], value]
+    }));
   };
 
   const handleSubmit = async () => {
-    const payload = {
-      city,
-      districts: selectedDistricts,
-      minPrice,
-      maxPrice,
-      minArea,
-      maxArea,
-      buildingTypes: selectedBuildingTypes,
-      rooms: selectedRooms,
-      standards: selectedStandards,
-      maxDeposit,
-      floor,
-      isFurnished,
-      isPrivateOffer,
-      bedrooms,
-    };
-    const response = await fetch('http://127.0.0.1:8000/subscriptions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    });
-    if (response.ok) {
-      navigate('/subscriptions');
-    } else {
-      alert('Nie udało się utworzyć subskrypcji');
+    try {
+      const response = await fetch('http://127.0.0.1:8000/subscriptions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        navigate('/subscriptions');
+      } else {
+        throw new Error('Nie udało się utworzyć subskrypcji');
+      }
+    } catch (error) {
+      alert(error.message);
     }
   };
 
-  const renderProgress = () => {
-    const totalSteps = 13;
-    const progressPercentage = Math.min((step / totalSteps) * 100, 100);
-
-    return (
-      <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
-        <div
-          className="bg-blue-500 h-2.5 rounded-full"
-          style={{ width: `${progressPercentage}%` }}
-        ></div>
-      </div>
-    );
-  };
-
-  return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-2xl font-bold text-center mb-4">Stwórz subskrypcję</h1>
-
-        {renderProgress()}
-
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-center mb-4">
-            Krok {step} z 13
-          </h2>
-        </div>
-
-        {step === 1 && (
-          <div>
-            <label className="block text-gray-700 text-lg font-bold mb-2">Wybierz miasto</label>
+  const renderStepContent = () => {
+    switch(step) {
+      case 1:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Wybierz miasto</h2>
             <select
-              className="w-full p-2 mb-4 border rounded"
-              value={city}
-              onChange={handleCityChange}
-              required
+              name="city"
+              value={formData.city}
+              onChange={handleInputChange}
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Wybierz miasto</option>
-              <option value="Warszawa">Warszawa</option>
-              <option value="Kraków">Kraków</option>
-              <option value="Wrocław">Wrocław</option>
+              {Object.keys(districtOptions).map(city => (
+                <option key={city} value={city}>{city}</option>
+              ))}
             </select>
           </div>
-        )}
-
-        {step === 2 && (
-          <div>
-            <label className="block text-gray-700 text-lg font-bold mb-2">Wybierz dzielnice</label>
+        );
+      case 2:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Wybierz dzielnice</h2>
             <div className="grid grid-cols-2 gap-2">
-              {districts.map((district) => (
+              {districtOptions[formData.city]?.map(district => (
                 <label key={district} className="flex items-center space-x-2">
                   <input
                     type="checkbox"
-                    checked={selectedDistricts.includes(district)}
-                    onChange={() => handleCheckboxChange(setSelectedDistricts, district)}
+                    checked={formData.districts.includes(district)}
+                    onChange={() => handleArrayInputChange('districts', district)}
+                    className="form-checkbox text-blue-600"
                   />
                   <span>{district}</span>
                 </label>
               ))}
             </div>
           </div>
-        )}
-
-        {step === 3 && (
-          <div>
-            <label className="block text-gray-700 text-lg font-bold mb-2">Wybierz typ zabudowania</label>
+        );
+      case 3:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Wybierz typ zabudowania</h2>
             <div className="grid grid-cols-2 gap-2">
-              {buildingTypes.map((type) => (
+              {buildingTypes.map(type => (
                 <label key={type} className="flex items-center space-x-2">
                   <input
                     type="checkbox"
-                    checked={selectedBuildingTypes.includes(type)}
-                    onChange={() => handleCheckboxChange(setSelectedBuildingTypes, type)}
+                    checked={formData.buildingTypes.includes(type)}
+                    onChange={() => handleArrayInputChange('buildingTypes', type)}
+                    className="form-checkbox text-blue-600"
                   />
                   <span>{type}</span>
                 </label>
               ))}
             </div>
           </div>
-        )}
-
-        {step === 4 && (
-          <div>
-            <label className="block text-gray-700 text-lg font-bold mb-2">Wybierz liczbę pokoi</label>
+        );
+      case 4:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Wybierz liczbę pokoi</h2>
             <div className="grid grid-cols-2 gap-2">
-              {roomOptions.map((room) => (
+              {roomOptions.map(room => (
                 <label key={room} className="flex items-center space-x-2">
                   <input
                     type="checkbox"
-                    checked={selectedRooms.includes(room)}
-                    onChange={() => handleCheckboxChange(setSelectedRooms, room)}
+                    checked={formData.rooms.includes(room)}
+                    onChange={() => handleArrayInputChange('rooms', room)}
+                    className="form-checkbox text-blue-600"
                   />
                   <span>{room}</span>
                 </label>
               ))}
             </div>
           </div>
-        )}
-
-        {step === 5 && (
-          <div>
-            <label className="block text-gray-700 text-lg font-bold mb-2">Wybierz standard mieszkania</label>
+        );
+      case 5:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Wybierz standard mieszkania</h2>
             <div className="grid grid-cols-2 gap-2">
-              {standardOptions.map((standard) => (
+              {standardOptions.map(standard => (
                 <label key={standard} className="flex items-center space-x-2">
                   <input
                     type="checkbox"
-                    checked={selectedStandards.includes(standard)}
-                    onChange={() => handleCheckboxChange(setSelectedStandards, standard)}
+                    checked={formData.standards.includes(standard)}
+                    onChange={() => handleArrayInputChange('standards', standard)}
+                    className="form-checkbox text-blue-600"
                   />
                   <span>{standard}</span>
                 </label>
               ))}
             </div>
           </div>
-        )}
-
-        {step === 6 && (
-          <div>
-            <label className="block text-gray-700 text-lg font-bold mb-2">Wybierz cenę</label>
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Cena minimalna</label>
+        );
+      case 6:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Wybierz zakres cenowy</h2>
+            <div className="flex space-x-4">
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700">Cena minimalna</label>
+                <input
+                  type="number"
+                  name="minPrice"
+                  value={formData.minPrice}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700">Cena maksymalna</label>
+                <input
+                  type="number"
+                  name="maxPrice"
+                  value={formData.maxPrice}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
+          </div>
+        );
+      case 7:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Wybierz powierzchnię</h2>
+            <div className="flex space-x-4">
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700">Powierzchnia minimalna</label>
+                <input
+                  type="number"
+                  name="minArea"
+                  value={formData.minArea}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700">Powierzchnia maksymalna</label>
+                <input
+                  type="number"
+                  name="maxArea"
+                  value={formData.maxArea}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
+          </div>
+        );
+      case 8:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Dodatkowe preferencje</h2>
+            <div className="space-y-2">
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  name="isFurnished"
+                  checked={formData.isFurnished}
+                  onChange={handleInputChange}
+                  className="form-checkbox text-blue-600"
+                />
+                <span>Tylko mieszkania umeblowane</span>
+              </label>
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  name="isPrivateOffer"
+                  checked={formData.isPrivateOffer}
+                  onChange={handleInputChange}
+                  className="form-checkbox text-blue-600"
+                />
+                <span>Tylko oferty prywatne</span>
+              </label>
+            </div>
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700">Maksymalna kaucja</label>
               <input
                 type="number"
-                className="w-full p-2 border rounded"
-                value={minPrice}
-                onChange={(e) => setMinPrice(e.target.value)}
+                name="maxDeposit"
+                value={formData.maxDeposit}
+                onChange={handleInputChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Cena maksymalna</label>
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700">Preferowane piętro</label>
               <input
                 type="number"
-                className="w-full p-2 border rounded"
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(e.target.value)}
+                name="floor"
+                value={formData.floor}
+                onChange={handleInputChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
-          </div>
-        )}
-
-        {step === 7 && (
-          <div>
-            <label className="block text-gray-700 text-lg font-bold mb-2">Wybierz powierzchnię</label>
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Powierzchnia minimalna</label>
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700">Liczba sypialni</label>
               <input
                 type="number"
-                className="w-full p-2 border rounded"
-                value={minArea}
-                onChange={(e) => setMinArea(e.target.value)}
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Powierzchnia maksymalna</label>
-              <input
-                type="number"
-                className="w-full p-2 border rounded"
-                value={maxArea}
-                onChange={(e) => setMaxArea(e.target.value)}
+                name="bedrooms"
+                value={formData.bedrooms}
+                onChange={handleInputChange}
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
-        )}
-
-        {step === 8 && (
-          <div>
-            <label className="block text-gray-700 text-lg font-bold mb-2">Wybierz maksymalną kaucję</label>
-            <input
-              type="number"
-              className="w-full p-2 border rounded"
-              value={maxDeposit}
-              onChange={(e) => setMaxDeposit(e.target.value)}
-            />
-          </div>
-        )}
-
-        {step === 9 && (
-          <div>
-            <label className="block text-gray-700 text-lg font-bold mb-2">Wybierz piętro</label>
-            <input
-              type="number"
-              className="w-full p-2 border rounded"
-              value={floor}
-              onChange={(e) => setFloor(e.target.value)}
-            />
-          </div>
-        )}
-
-        {step === 10 && (
-          <div>
-            <label className="block text-gray-700 text-lg font-bold mb-2">Czy mieszkanie umeblowane?</label>
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={isFurnished}
-                onChange={() => setIsFurnished(!isFurnished)}
-              />
-              <span>Tylko mieszkania umeblowane</span>
-            </label>
-          </div>
-        )}
-
-        {step === 11 && (
-          <div>
-            <label className="block text-gray-700 text-lg font-bold mb-2">Czy oferta prywatna?</label>
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={isPrivateOffer}
-                onChange={() => setIsPrivateOffer(!isPrivateOffer)}
-              />
-              <span>Tylko oferty prywatne</span>
-            </label>
-          </div>
-        )}
-
-        {step === 12 && (
-          <div>
-            <label className="block text-gray-700 text-lg font-bold mb-2">Wybierz liczbę sypialni</label>
-            <input
-              type="number"
-              className="w-full p-2 border rounded"
-              value={bedrooms}
-              onChange={(e) => setBedrooms(e.target.value)}
-            />
-          </div>
-        )}
-
-        {step === 13 && (
-          <div>
-            <h2 className="text-xl font-bold text-gray-700 mb-4">Podsumowanie subskrypcji</h2>
-            <div className="mb-4">
-              <strong>Miasto:</strong> {city}
-            </div>
-            <div className="mb-4">
-              <strong>Dzielnice:</strong> {selectedDistricts.join(', ')}
-            </div>
-            <div className="mb-4">
-              <strong>Typ zabudowania:</strong> {selectedBuildingTypes.join(', ')}
-            </div>
-            <div className="mb-4">
-              <strong>Liczba pokoi:</strong> {selectedRooms.join(', ')}
-            </div>
-            <div className="mb-4">
-              <strong>Standard mieszkania:</strong> {selectedStandards.join(', ')}
-            </div>
-            <div className="mb-4">
-              <strong>Cena:</strong> {minPrice} - {maxPrice} PLN
-            </div>
-            <div className="mb-4">
-              <strong>Powierzchnia:</strong> {minArea} - {maxArea} m²
-            </div>
-            <div className="mb-4">
-              <strong>Maksymalna kaucja:</strong> {maxDeposit} PLN
-            </div>
-            <div className="mb-4">
-              <strong>Piętro:</strong> {floor}
-            </div>
-            <div className="mb-4">
-              <strong>Mieszkanie umeblowane:</strong> {isFurnished ? "Tak" : "Nie"}
-            </div>
-            <div className="mb-4">
-              <strong>Oferta prywatna:</strong> {isPrivateOffer ? "Tak" : "Nie"}
-            </div>
-            <div className="mb-4">
-              <strong>Liczba sypialni:</strong> {bedrooms}
+        );
+      case 9:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Podsumowanie subskrypcji</h2>
+            <div className="bg-gray-100 p-4 rounded-md">
+              <p><strong>Miasto:</strong> {formData.city}</p>
+              <p><strong>Dzielnice:</strong> {formData.districts.join(', ')}</p>
+              <p><strong>Typ zabudowania:</strong> {formData.buildingTypes.join(', ')}</p>
+              <p><strong>Liczba pokoi:</strong> {formData.rooms.join(', ')}</p>
+              <p><strong>Standard:</strong> {formData.standards.join(', ')}</p>
+              <p><strong>Cena:</strong> {formData.minPrice} - {formData.maxPrice} PLN</p>
+              <p><strong>Powierzchnia:</strong> {formData.minArea} - {formData.maxArea} m²</p>
+              <p><strong>Maksymalna kaucja:</strong> {formData.maxDeposit} PLN</p>
+              <p><strong>Piętro:</strong> {formData.floor}</p>
+              <p><strong>Umeblowane:</strong> {formData.isFurnished ? 'Tak' : 'Nie'}</p>
+              <p><strong>Oferta prywatna:</strong> {formData.isPrivateOffer ? 'Tak' : 'Nie'}</p>
+              <p><strong>Liczba sypialni:</strong> {formData.bedrooms}</p>
             </div>
           </div>
-        )}
+        );
+      default:
+        return null;
+    }
+  };
 
-        {/* Przyciski nawigacyjne */}
-        <div className="flex justify-between mt-6">
-          {step > 1 && (
-            <button
-              className="p-2 text-white bg-gray-400 rounded hover:bg-gray-500 flex items-center"
-              onClick={() => setStep(step - 1)}
-            >
-              <FaArrowLeft className="mr-2" /> Wstecz
-            </button>
-          )}
+   return (
+    <div className="min-h-screen bg-gray-100">
+      {/* Pasek nawigacyjny */}
+      <nav className="bg-white shadow-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex">
+              <Link to="/" className="flex-shrink-0 flex items-center">
+                <FaHome className="h-8 w-8 text-blue-600" />
+                <span className="ml-2 text-2xl font-bold text-blue-600">ApartmentsHunter</span>
+              </Link>
+            </div>
+            <div className="flex items-center">
+              <Link to="/subscriptions" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                Moje subskrypcje
+              </Link>
+            </div>
+          </div>
+        </div>
+      </nav>
 
-          {step < 13 ? (
-            <button
-              className="p-2 text-white bg-blue-500 rounded hover:bg-blue-600 flex items-center ml-auto"
-              onClick={() => setStep(step + 1)}
-            >
-              Dalej <FaArrowRight className="ml-2" />
-            </button>
-          ) : (
-            <button
-              className="p-2 text-white bg-green-500 rounded hover:bg-green-600 flex items-center ml-auto"
-              onClick={handleSubmit}
-            >
-              Utwórz Subskrypcję
-            </button>
-          )}
+      {/* Zawartość strony */}
+      <div className="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div className="bg-white shadow-xl rounded-lg overflow-hidden">
+          <div className="px-8 py-6">
+            <h1 className="text-3xl font-bold text-gray-900 mb-6">Stwórz subskrypcję</h1>
+            <div className="mb-8">
+              <div className="relative pt-1">
+                <div className="flex mb-2 items-center justify-between">
+                  <div>
+                    <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200">
+                      Krok {step} z 9
+                    </span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-xs font-semibold inline-block text-blue-600">
+                      {Math.round((step / 9) * 100)}%
+                    </span>
+                  </div>
+                </div>
+                <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
+                  <div
+                    style={{ width: `${(step / 9) * 100}%` }}
+                    className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-600"
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            {renderStepContent()}
+
+            <div className="mt-8 flex justify-between">
+              {step > 1 && (
+                <button
+                  onClick={() => setStep(step - 1)}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-300 flex items-center"
+                >
+                  <FaArrowLeft className="mr-2" /> Wstecz
+                </button>
+              )}
+              {step < 9 ? (
+                <button
+                  onClick={() => setStep(step + 1)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 flex items-center ml-auto"
+                >
+                  Dalej <FaArrowRight className="ml-2" />
+                </button>
+              ) : (
+                <button
+                  onClick={handleSubmit}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 flex items-center ml-auto"
+                >
+                  <FaCheck className="mr-2" /> Utwórz Subskrypcję
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
