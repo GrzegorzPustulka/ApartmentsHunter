@@ -21,10 +21,9 @@ function LoginPage() {
 
     const data = await response.json();
     if (response.ok) {
-      login(data.token);
+      login(data.access_token);
       navigate('/subscriptions');
     } else {
-      console.log(username, password)
       alert('Błędne dane logowania');
     }
   };
