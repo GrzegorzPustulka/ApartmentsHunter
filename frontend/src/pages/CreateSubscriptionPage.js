@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaArrowRight, FaArrowLeft, FaCheck, FaHome } from 'react-icons/fa';
@@ -8,31 +8,34 @@ function CreateSubscriptionPage() {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     city: '',
-    districts: [],
-    buildingTypes: [],
-    rooms: [],
-    standards: [],
-    minPrice: '',
-    maxPrice: '',
-    minArea: '',
-    maxArea: '',
-    maxDeposit: '',
-    floor: '',
-    isFurnished: false,
-    isPrivateOffer: false,
-    bedrooms: '',
+    district: [],
+    building_type: [],
+    number_of_rooms: [],
+    standard: [],
+    minimum_price: 0,
+    maximum_price: 99999999999,
+    minimum_area: 0,
+    maximum_area: 99999999999,
+    deposit: null,
+    floor_level: [],
+    is_furnished: null,
+    is_private_offer: null,
+    bedrooms: [],
+    user_email: '',
   });
   const navigate = useNavigate();
 
   const districtOptions = {
     Warszawa: ['Śródmieście', 'Mokotów', 'Wola', 'Praga Południe', 'Bielany'],
-    Kraków: ["Stare Miasto", "Grzegórzki", "Prądnik Czerwony", "Prądnik Biały", "Krowodrza", "Bronowice", "Zwierzyniec", "Dębniki", "Łagiewniki-Borek Fałęcki", "Swoszowice", "Podgórze Duchackie", "Bieżanów-Prokocim", "Podgórze", "Czyżyny", "Mistrzejowice", "Bieńczyce", "Wzgórza Krzesławickie", "Nowa Huta"],
+    krakow: ["Stare Miasto", "Grzegórzki", "Prądnik Czerwony", "Prądnik Biały", "Krowodrza", "Bronowice", "Zwierzyniec", "Dębniki", "Łagiewniki-Borek Fałęcki", "Swoszowice", "Podgórze Duchackie", "Bieżanów-Prokocim", "Podgórze", "Czyżyny", "Mistrzejowice", "Bieńczyce", "Wzgórza Krzesławickie", "Nowa Huta"],
     Wrocław: ['Krzyki', 'Psie Pole', 'Śródmieście', 'Fabryczna'],
   };
 
   const buildingTypes = ["Blok", "Kamienica", "Dom wolnostojący", "Szeregowiec", "Apartamentowiec", "Loft", "Pozostałe"];
   const roomOptions = ["1 pokój", "2 pokoje", "3 pokoje", "4 i więcej"];
   const standardOptions = ["niski", "normalny", "wysoki"];
+  const floorOptions = ["suterena", "parter", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10 i powyżej"];
+  const bedroomOptions = ["1", "2", "3", "4", "5", "6", "6 i więcej"];
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -99,8 +102,8 @@ function CreateSubscriptionPage() {
                 <label key={district} className="flex items-center space-x-2">
                   <input
                     type="checkbox"
-                    checked={formData.districts.includes(district)}
-                    onChange={() => handleArrayInputChange('districts', district)}
+                    checked={formData.district.includes(district)}
+                    onChange={() => handleArrayInputChange('district', district)}
                     className="form-checkbox text-blue-600"
                   />
                   <span>{district}</span>
@@ -118,8 +121,8 @@ function CreateSubscriptionPage() {
                 <label key={type} className="flex items-center space-x-2">
                   <input
                     type="checkbox"
-                    checked={formData.buildingTypes.includes(type)}
-                    onChange={() => handleArrayInputChange('buildingTypes', type)}
+                    checked={formData.building_type.includes(type)}
+                    onChange={() => handleArrayInputChange('building_type', type)}
                     className="form-checkbox text-blue-600"
                   />
                   <span>{type}</span>
@@ -137,8 +140,8 @@ function CreateSubscriptionPage() {
                 <label key={room} className="flex items-center space-x-2">
                   <input
                     type="checkbox"
-                    checked={formData.rooms.includes(room)}
-                    onChange={() => handleArrayInputChange('rooms', room)}
+                    checked={formData.number_of_rooms.includes(room)}
+                    onChange={() => handleArrayInputChange('number_of_rooms', room)}
                     className="form-checkbox text-blue-600"
                   />
                   <span>{room}</span>
@@ -156,8 +159,8 @@ function CreateSubscriptionPage() {
                 <label key={standard} className="flex items-center space-x-2">
                   <input
                     type="checkbox"
-                    checked={formData.standards.includes(standard)}
-                    onChange={() => handleArrayInputChange('standards', standard)}
+                    checked={formData.standard.includes(standard)}
+                    onChange={() => handleArrayInputChange('standard', standard)}
                     className="form-checkbox text-blue-600"
                   />
                   <span>{standard}</span>
@@ -175,8 +178,8 @@ function CreateSubscriptionPage() {
                 <label className="block text-sm font-medium text-gray-700">Cena minimalna</label>
                 <input
                   type="number"
-                  name="minPrice"
-                  value={formData.minPrice}
+                  name="minimum_price"
+                  value={formData.minimum_price}
                   onChange={handleInputChange}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -185,8 +188,8 @@ function CreateSubscriptionPage() {
                 <label className="block text-sm font-medium text-gray-700">Cena maksymalna</label>
                 <input
                   type="number"
-                  name="maxPrice"
-                  value={formData.maxPrice}
+                  name="maximum_price"
+                  value={formData.maximum_price}
                   onChange={handleInputChange}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -203,8 +206,8 @@ function CreateSubscriptionPage() {
                 <label className="block text-sm font-medium text-gray-700">Powierzchnia minimalna</label>
                 <input
                   type="number"
-                  name="minArea"
-                  value={formData.minArea}
+                  name="minimum_area"
+                  value={formData.minimum_area}
                   onChange={handleInputChange}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -213,8 +216,8 @@ function CreateSubscriptionPage() {
                 <label className="block text-sm font-medium text-gray-700">Powierzchnia maksymalna</label>
                 <input
                   type="number"
-                  name="maxArea"
-                  value={formData.maxArea}
+                  name="maximum_area"
+                  value={formData.maximum_area}
                   onChange={handleInputChange}
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
@@ -225,78 +228,145 @@ function CreateSubscriptionPage() {
       case 8:
         return (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Dodatkowe preferencje</h2>
-            <div className="space-y-2">
-              <label className="flex items-center space-x-2">
+            <h2 className="text-xl font-semibold">Umeblowanie</h2>
+            <div className="flex space-x-4">
+              <label className="inline-flex items-center">
                 <input
-                  type="checkbox"
-                  name="isFurnished"
-                  checked={formData.isFurnished}
-                  onChange={handleInputChange}
-                  className="form-checkbox text-blue-600"
+                  type="radio"
+                  name="is_furnished"
+                  value="true"
+                  checked={formData.is_furnished === true}
+                  onChange={() => setFormData({...formData, is_furnished: true})}
+                  className="form-radio text-blue-600"
                 />
-                <span>Tylko mieszkania umeblowane</span>
+                <span className="ml-2">Tak</span>
               </label>
-              <label className="flex items-center space-x-2">
+              <label className="inline-flex items-center">
                 <input
-                  type="checkbox"
-                  name="isPrivateOffer"
-                  checked={formData.isPrivateOffer}
-                  onChange={handleInputChange}
-                  className="form-checkbox text-blue-600"
+                  type="radio"
+                  name="is_furnished"
+                  value="false"
+                  checked={formData.is_furnished === false}
+                  onChange={() => setFormData({...formData, is_furnished: false})}
+                  className="form-radio text-blue-600"
                 />
-                <span>Tylko oferty prywatne</span>
+                <span className="ml-2">Nie</span>
               </label>
-            </div>
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700">Maksymalna kaucja</label>
-              <input
-                type="number"
-                name="maxDeposit"
-                value={formData.maxDeposit}
-                onChange={handleInputChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700">Preferowane piętro</label>
-              <input
-                type="number"
-                name="floor"
-                value={formData.floor}
-                onChange={handleInputChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700">Liczba sypialni</label>
-              <input
-                type="number"
-                name="bedrooms"
-                value={formData.bedrooms}
-                onChange={handleInputChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              />
             </div>
           </div>
         );
       case 9:
         return (
           <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Oferta prywatna</h2>
+            <div className="flex space-x-4">
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  name="is_private_offer"
+                  value="true"
+                  checked={formData.is_private_offer === true}
+                  onChange={() => setFormData({...formData, is_private_offer: true})}
+                  className="form-radio text-blue-600"
+                />
+                <span className="ml-2">Tak</span>
+              </label>
+              <label className="inline-flex items-center">
+                <input
+                  type="radio"
+                  name="is_private_offer"
+                  value="false"
+                  checked={formData.is_private_offer === false}
+                  onChange={() => setFormData({...formData, is_private_offer: false})}
+                  className="form-radio text-blue-600"
+                />
+                <span className="ml-2">Nie</span>
+              </label>
+            </div>
+          </div>
+        );
+      case 10:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Maksymalna kaucja</h2>
+            <input
+              type="number"
+              name="deposit"
+              value={formData.deposit}
+              onChange={handleInputChange}
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        );
+      case 11:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Preferowane piętro</h2>
+            <div className="grid grid-cols-3 gap-2">
+              {floorOptions.map(floor => (
+                <label key={floor} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={formData.floor_level.includes(floor)}
+                    onChange={() => handleArrayInputChange('floor_level', floor)}
+                    className="form-checkbox text-blue-600"
+                  />
+                  <span>{floor}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        );
+      case 12:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Liczba sypialni</h2>
+            <div className="grid grid-cols-3 gap-2">
+              {bedroomOptions.map(bedroom => (
+                <label key={bedroom} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={formData.bedrooms.includes(bedroom)}
+                    onChange={() => handleArrayInputChange('bedrooms', bedroom)}
+                    className="form-checkbox text-blue-600"
+                  />
+                  <span>{bedroom}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        );
+      case 13:
+        return (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Podaj adres e-mail</h2>
+            <input
+              type="email"
+              name="user_email"
+              value={formData.user_email}
+              onChange={handleInputChange}
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        );
+      case 14:
+        return (
+          <div className="space-y-4">
             <h2 className="text-xl font-semibold">Podsumowanie subskrypcji</h2>
             <div className="bg-gray-100 p-4 rounded-md">
+              <p><strong>Email:</strong> {formData.user_email}</p>
               <p><strong>Miasto:</strong> {formData.city}</p>
-              <p><strong>Dzielnice:</strong> {formData.districts.join(', ')}</p>
-              <p><strong>Typ zabudowania:</strong> {formData.buildingTypes.join(', ')}</p>
-              <p><strong>Liczba pokoi:</strong> {formData.rooms.join(', ')}</p>
-              <p><strong>Standard:</strong> {formData.standards.join(', ')}</p>
-              <p><strong>Cena:</strong> {formData.minPrice} - {formData.maxPrice} PLN</p>
-              <p><strong>Powierzchnia:</strong> {formData.minArea} - {formData.maxArea} m²</p>
-              <p><strong>Maksymalna kaucja:</strong> {formData.maxDeposit} PLN</p>
-              <p><strong>Piętro:</strong> {formData.floor}</p>
-              <p><strong>Umeblowane:</strong> {formData.isFurnished ? 'Tak' : 'Nie'}</p>
-              <p><strong>Oferta prywatna:</strong> {formData.isPrivateOffer ? 'Tak' : 'Nie'}</p>
-              <p><strong>Liczba sypialni:</strong> {formData.bedrooms}</p>
+              <p><strong>Dzielnice:</strong> {formData.district.join(', ')}</p>
+              <p><strong>Typ zabudowania:</strong> {formData.building_type.join(', ')}</p>
+              <p><strong>Liczba pokoi:</strong> {formData.number_of_rooms.join(', ')}</p>
+              <p><strong>Standard:</strong> {formData.standard.join(', ')}</p>
+              <p><strong>Cena:</strong> {formData.minimum_price} - {formData.maximum_price} PLN</p>
+              <p><strong>Powierzchnia:</strong> {formData.minimum_area} - {formData.maximum_area} m²</p>
+              <p><strong>Maksymalna kaucja:</strong> {formData.deposit} PLN</p>
+              <p><strong>Preferowane piętra:</strong> {formData.floor_level.join(', ')}</p>
+              <p><strong>Umeblowane:</strong> {formData.is_furnished ? 'Tak' : 'Nie'}</p>
+              <p><strong>Oferta prywatna:</strong> {formData.is_private_offer ? 'Tak' : 'Nie'}</p>
+              <p><strong>Liczba sypialni:</strong> {formData.bedrooms.join(', ')}</p>
             </div>
           </div>
         );
@@ -305,9 +375,8 @@ function CreateSubscriptionPage() {
     }
   };
 
-   return (
+  return (
     <div className="min-h-screen bg-gray-100">
-      {/* Pasek nawigacyjny */}
       <nav className="bg-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
@@ -326,7 +395,6 @@ function CreateSubscriptionPage() {
         </div>
       </nav>
 
-      {/* Zawartość strony */}
       <div className="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="bg-white shadow-xl rounded-lg overflow-hidden">
           <div className="px-8 py-6">
@@ -336,18 +404,18 @@ function CreateSubscriptionPage() {
                 <div className="flex mb-2 items-center justify-between">
                   <div>
                     <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200">
-                      Krok {step} z 9
+                      Krok {step} z 14
                     </span>
                   </div>
                   <div className="text-right">
                     <span className="text-xs font-semibold inline-block text-blue-600">
-                      {Math.round((step / 9) * 100)}%
+                      {Math.round((step / 14) * 100)}%
                     </span>
                   </div>
                 </div>
                 <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
                   <div
-                    style={{ width: `${(step / 9) * 100}%` }}
+                    style={{ width: `${(step / 14) * 100}%` }}
                     className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-600"
                   ></div>
                 </div>
@@ -365,7 +433,7 @@ function CreateSubscriptionPage() {
                   <FaArrowLeft className="mr-2" /> Wstecz
                 </button>
               )}
-              {step < 9 ? (
+              {step < 14 ? (
                 <button
                   onClick={() => setStep(step + 1)}
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 flex items-center ml-auto"
