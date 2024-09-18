@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 
 function CreateSubscriptionPage() {
@@ -25,7 +25,26 @@ function CreateSubscriptionPage() {
 
   const districtOptions = {
     Warszawa: ['Śródmieście', 'Mokotów', 'Wola', 'Praga Południe', 'Bielany'],
-    Kraków: ['Stare Miasto', 'Podgórze', 'Nowa Huta', 'Krowodrza'],
+    Kraków: [
+        "Bieńczyce",
+        "Bieżanów-Prokocim",
+        "Bronowice",
+        "Czyżyny",
+        "Dębniki",
+        "Grzegórzki",
+        "Krowodrza",
+        "Łagiewniki-Borek Fałęcki",
+        "Mistrzejowice",
+        "Nowa Huta",
+        "Podgórze",
+        "Podgórze Duchackie",
+        "Prądnik Biały",
+        "Prądnik Czerwony",
+        "Stare Miasto",
+        "Swoszowice",
+        "Wzgórza Krzesławickie",
+        "Zwierzyniec",
+    ],
     Wrocław: ['Krzyki', 'Psie Pole', 'Śródmieście', 'Fabryczna'],
   };
 
