@@ -1,7 +1,7 @@
 // src/hooks/useSubscriptions.js
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { fetchSubscriptions, deleteSubscription } from '../utils/api';
+import { fetchSubscriptions, deleteSubscription, toggleSubscriptionStatus } from '../utils/api';
 
 const useSubscriptions = () => {
   const [subscriptions, setSubscriptions] = useState([]);
@@ -25,7 +25,18 @@ const useSubscriptions = () => {
     }
   };
 
-  return { subscriptions, handleDelete };
+  const handleToggleStatus = async (id, isPaused) => {
+    try {
+      const updatedSubscription = await toggleSubscriptionStatus(token, id, isPaused);
+      setSubscriptions(subscriptions.map(sub =>
+        sub.id === id ? { ...sub, is_paused: updatedSubscription.is_paused } : sub
+      ));
+    } catch (error) {
+      console.error("Błąd podczas zmiany statusu subskrypcji:", error);
+    }
+  };
+
+  return { subscriptions, handleDelete, handleToggleStatus };
 };
 
 export default useSubscriptions;

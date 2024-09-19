@@ -49,3 +49,16 @@ export const deleteSubscription = async (token, id) => {
   });
   if (!response.ok) throw new Error('Nie udało się usunąć subskrypcji');
 };
+
+export const toggleSubscriptionStatus = async (token, id, isPaused) => {
+  const response = await fetch(`${API_URL}/subscriptions/${id}/toggle-status`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ is_paused: isPaused }),
+  });
+  if (!response.ok) throw new Error('Nie udało się zmienić statusu subskrypcji');
+  return response.json();
+};
