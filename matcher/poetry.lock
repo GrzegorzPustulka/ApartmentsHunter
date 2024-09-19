@@ -134,7 +134,7 @@ pymongo = "^4.8.0"
 type = "git"
 url = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git"
 reference = "HEAD"
-resolved_reference = "631a19050be4ecac0d3bcf93843a896a701e35c8"
+resolved_reference = "24e075af3449e81ea771b9186f9c320bdd7d15bf"
 subdirectory = "catalogue"
 
 [[package]]
@@ -1377,7 +1377,7 @@ uvicorn = "^0.30.1"
 type = "git"
 url = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git"
 reference = "HEAD"
-resolved_reference = "631a19050be4ecac0d3bcf93843a896a701e35c8"
+resolved_reference = "24e075af3449e81ea771b9186f9c320bdd7d15bf"
 subdirectory = "subscriptions"
 
 [[package]]
