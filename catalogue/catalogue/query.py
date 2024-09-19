@@ -51,7 +51,6 @@ class QueryBuilder:
         query = {}
         for field in [
             "building_type",
-            "floor_level",
             "number_of_rooms",
             "district",
             "bedrooms",

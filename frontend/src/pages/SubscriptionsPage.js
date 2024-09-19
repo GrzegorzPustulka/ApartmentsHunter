@@ -123,7 +123,6 @@ function SubscriptionsPage() {
                     <p className="text-sm text-gray-600">Maksymalna kaucja: {sub.deposit ? sub.deposit + ' PLN' : 'Brak'}</p>
                     <p className="text-sm text-gray-600">Typ budynku: {sub.building_type ? sub.building_type.join(', ') : 'Brak'}</p>
                     <p className="text-sm text-gray-600">Liczba pokoi: {sub.number_of_rooms ? sub.number_of_rooms.join(', ') : 'Brak'}</p>
-                    <p className="text-sm text-gray-600">Poziomy: {sub.floor_level ? sub.floor_level.join(', ') : 'Brak'}</p>
                     <p className="text-sm text-gray-600">Umeblowanie: {sub.is_furnished ? 'Tak' : 'Nie'}</p>
                     <p className="text-sm text-gray-600">Oferta prywatna: {sub.is_private_offer ? 'Tak' : 'Nie'}</p>
                     <p className="text-sm text-gray-600">Liczba sypialni: {sub.bedrooms ? sub.bedrooms.join(', ') : 'Brak'}</p>

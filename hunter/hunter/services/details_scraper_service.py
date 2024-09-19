@@ -32,7 +32,6 @@ class DetailsScraperService:
         details = {
             "building_type": None,
             "number_of_rooms": None,
-            "floor_level": None,
             "is_furnished": None,
             "is_private_offer": None,
             "rent": None,
@@ -41,7 +40,6 @@ class DetailsScraperService:
         mapping = {
             "Rodzaj zabudowy": "building_type",
             "Liczba pokoi": "number_of_rooms",
-            "Poziom": "floor_level",
             "Umeblowane": "is_furnished",
             "Prywatne": "is_private_offer",
             "Firmowe": "is_private_offer",

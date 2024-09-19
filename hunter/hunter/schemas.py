@@ -38,7 +38,6 @@ class DetailsOffer(BaseModel):
 
     building_type: str
     number_of_rooms: str
-    floor_level: str | None = None
     is_furnished: bool
     is_private_offer: bool
 
@@ -70,6 +69,5 @@ class SchemaForWriter(BaseModel):
     area: float
     building_type: str
     number_of_rooms: str
-    floor_level: str | None = None
     is_furnished: bool
     is_private_offer: bool

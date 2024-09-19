@@ -1,4 +1,4 @@
-GET_DISTRICTS = {
+GET_DISTRICT = {
     "krakow": [
         "Bieńczyce",
         "Bieżanów-Prokocim",
@@ -22,3 +22,7 @@ GET_DISTRICTS = {
     "warszawa": [],
     "poznan": [],
 }
+
+
+def get_district(district: str) -> str:
+    return GET_DISTRICT.get(district, district)

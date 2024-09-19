@@ -42,10 +42,9 @@ class Subscription(Base):
     deposit: Mapped[int | None]
     building_type: Mapped[list[str] | None] = mapped_column(ARRAY(String))
     number_of_rooms: Mapped[list[str] | None] = mapped_column(ARRAY(String))
-    floor_level: Mapped[list[int] | None] = mapped_column(ARRAY(Integer))
     is_furnished: Mapped[bool | None]
     is_private_offer: Mapped[bool | None]
-    bedrooms: Mapped[list[int] | None] = mapped_column(ARRAY(Integer))
+    bedrooms: Mapped[list[str] | None] = mapped_column(ARRAY(String))
     standard: Mapped[list[str] | None] = mapped_column(ARRAY(String))
 
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))

@@ -6,4 +6,4 @@ class PricerSchema(BaseModel):
     administrative_rent: int | float | None = None
     deposit: int | float | str
     standard: str
-    bedrooms: int
+    bedrooms: str
