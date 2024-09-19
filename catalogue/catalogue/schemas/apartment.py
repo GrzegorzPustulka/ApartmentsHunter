@@ -39,7 +39,6 @@ class ApartmentParams(BaseModel):
 
     @model_validator(mode="after")
     def validate_params(self) -> "ApartmentParams":
-        breakpoint()
         self.validate_area()
         self.validate_price()
         self.validate_district()
