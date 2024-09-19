@@ -1,7 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
-import { FaArrowRight, FaArrowLeft, FaCheck, FaHome } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { FaArrowRight, FaArrowLeft, FaCheck } from 'react-icons/fa';
+import Navbar from '../components/layout/Navbar';
+import { createSubscription } from '../utils/api';
 
 function CreateSubscriptionPage() {
   const { token } = useContext(AuthContext);
@@ -61,21 +63,8 @@ function CreateSubscriptionPage() {
         deposit: formData.deposit ? parseInt(formData.deposit) : null,
       };
 
-      const response = await fetch('http://127.0.0.1:8000/subscriptions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(dataToSend),
-      });
-
-      if (response.ok) {
-        navigate('/subscriptions');
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Nie udało się utworzyć subskrypcji');
-      }
+      await createSubscription(token, dataToSend);
+      navigate('/subscriptions');
     } catch (error) {
       alert(error.message);
     }
@@ -309,7 +298,7 @@ function CreateSubscriptionPage() {
         return (
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Liczba sypialni</h2>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {bedroomOptions.map(bedroom => (
                 <label key={bedroom} className="flex items-center space-x-2">
                   <input
@@ -364,77 +353,62 @@ function CreateSubscriptionPage() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex">
-              <Link to="/" className="flex-shrink-0 flex items-center">
-                <FaHome className="h-8 w-8 text-blue-600" />
-                <span className="ml-2 text-2xl font-bold text-blue-600">ApartmentsHunter</span>
-              </Link>
-            </div>
-            <div className="flex items-center">
-              <Link to="/subscriptions" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
-                Moje subskrypcje
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <div className="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow-xl rounded-lg overflow-hidden">
-          <div className="px-8 py-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-6">Stwórz subskrypcję</h1>
-            <div className="mb-8">
-              <div className="relative pt-1">
-                <div className="flex mb-2 items-center justify-between">
-                  <div>
-                    <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200">
-                      Krok {step} z 13
-                    </span>
+      <Navbar />
+      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="px-4 py-6 sm:px-0">
+          <h1 className="text-3xl font-bold text-gray-900 mb-6">Stwórz subskrypcję</h1>
+          <div className="bg-white shadow-xl rounded-lg overflow-hidden">
+            <div className="px-8 py-6">
+              <div className="mb-8">
+                <div className="relative pt-1">
+                  <div className="flex mb-2 items-center justify-between">
+                    <div>
+                      <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200">
+                        Krok {step} z 13
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xs font-semibold inline-block text-blue-600">
+                        {Math.round((step / 13) * 100)}%
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <span className="text-xs font-semibold inline-block text-blue-600">
-                      {Math.round((step / 14) * 100)}%
-                    </span>
+                  <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
+                    <div
+                      style={{ width: `${(step / 13) * 100}%` }}
+                      className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-600"
+                    ></div>
                   </div>
-                </div>
-                <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
-                  <div
-                    style={{ width: `${(step / 13) * 100}%` }}
-                    className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-600"
-                  ></div>
                 </div>
               </div>
-            </div>
 
-            {renderStepContent()}
+              {renderStepContent()}
 
-            <div className="mt-8 flex justify-between">
-              {step > 1 && (
-                <button
-                  onClick={() => setStep(step - 1)}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-300 flex items-center"
-                >
-                  <FaArrowLeft className="mr-2" /> Wstecz
-                </button>
-              )}
-              {step < 13 ? (
-                <button
-                  onClick={() => setStep(step + 1)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 flex items-center ml-auto"
-                >
-                  Dalej <FaArrowRight className="ml-2" />
-                </button>
-              ) : (
-                <button
-                  onClick={handleSubmit}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 flex items-center ml-auto"
-                >
-                  <FaCheck className="mr-2" /> Utwórz Subskrypcję
-                </button>
-              )}
+              <div className="mt-8 flex justify-between">
+                {step > 1 && (
+                  <button
+                    onClick={() => setStep(step - 1)}
+                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition duration-300 flex items-center"
+                  >
+                    <FaArrowLeft className="mr-2" /> Wstecz
+                  </button>
+                )}
+                {step < 13 ? (
+                  <button
+                    onClick={() => setStep(step + 1)}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 flex items-center ml-auto"
+                  >
+                    Dalej <FaArrowRight className="ml-2" />
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleSubmit}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 flex items-center ml-auto"
+                  >
+                    <FaCheck className="mr-2" /> Utwórz Subskrypcję
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
