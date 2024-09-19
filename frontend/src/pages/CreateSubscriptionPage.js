@@ -31,7 +31,7 @@ function CreateSubscriptionPage() {
   const buildingTypes = ["Blok", "Kamienica", "Dom wolnostojący", "Szeregowiec", "Apartamentowiec", "Loft", "Pozostałe"];
   const roomOptions = ["1 pokój", "2 pokoje", "3 pokoje", "4 i więcej"];
   const standardOptions = ["niski", "normalny", "wysoki"];
-  const bedroomOptions = ["1", "2", "3", "4", "5", "6", "6 i więcej"];
+  const bedroomOptions = ["1 sypialnia", "2 sypialnie", "3 sypialnie", "4 i więcej"];
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -52,18 +52,29 @@ function CreateSubscriptionPage() {
 
   const handleSubmit = async () => {
     try {
+      const dataToSend = {
+        ...formData,
+        minimum_price: formData.minimum_price ? parseInt(formData.minimum_price) : null,
+        maximum_price: formData.maximum_price ? parseInt(formData.maximum_price) : null,
+        minimum_area: formData.minimum_area ? parseFloat(formData.minimum_area) : null,
+        maximum_area: formData.maximum_area ? parseFloat(formData.maximum_area) : null,
+        deposit: formData.deposit ? parseInt(formData.deposit) : null,
+      };
+
       const response = await fetch('http://127.0.0.1:8000/subscriptions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSend),
       });
+
       if (response.ok) {
         navigate('/subscriptions');
       } else {
-        throw new Error('Nie udało się utworzyć subskrypcji');
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Nie udało się utworzyć subskrypcji');
       }
     } catch (error) {
       alert(error.message);
@@ -380,7 +391,7 @@ function CreateSubscriptionPage() {
                 <div className="flex mb-2 items-center justify-between">
                   <div>
                     <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200">
-                      Krok {step} z 14
+                      Krok {step} z 13
                     </span>
                   </div>
                   <div className="text-right">
@@ -409,7 +420,7 @@ function CreateSubscriptionPage() {
                   <FaArrowLeft className="mr-2" /> Wstecz
                 </button>
               )}
-              {step < 14 ? (
+              {step < 13 ? (
                 <button
                   onClick={() => setStep(step + 1)}
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300 flex items-center ml-auto"

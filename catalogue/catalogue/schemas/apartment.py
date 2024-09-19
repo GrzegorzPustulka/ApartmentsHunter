@@ -15,7 +15,7 @@ BuildingType = Literal[
     "Pozostałe",
 ]
 NumberOfRooms = Literal["1 pokój", "2 pokoje", "3 pokoje", "4 i więcej"]
-NumberOfBedrooms = Literal["1 sypialnia, 2 sypialnie", "3 sypialnie", "4 i więcej"]
+NumberOfBedrooms = Literal["1 sypialnia", "2 sypialnie", "3 sypialnie", "4 i więcej"]
 Standard = Literal["niski", "normalny", "wysoki"]
 
 
@@ -39,6 +39,7 @@ class ApartmentParams(BaseModel):
 
     @model_validator(mode="after")
     def validate_params(self) -> "ApartmentParams":
+        breakpoint()
         self.validate_area()
         self.validate_price()
         self.validate_district()
