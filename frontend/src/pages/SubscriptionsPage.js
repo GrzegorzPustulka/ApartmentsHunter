@@ -7,7 +7,7 @@ import useSubscriptions from '../hooks/useSubscriptions';
 import { FaPlus } from 'react-icons/fa';
 
 function SubscriptionsPage() {
-  const { subscriptions, handleDelete } = useSubscriptions();
+  const { subscriptions, handleDelete, handleToggleStatus } = useSubscriptions();
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -32,6 +32,7 @@ function SubscriptionsPage() {
                   key={sub.id}
                   subscription={sub}
                   onDelete={() => handleDelete(sub.id)}
+                  onToggleStatus={handleToggleStatus}
                 />
               ))
             ) : (
