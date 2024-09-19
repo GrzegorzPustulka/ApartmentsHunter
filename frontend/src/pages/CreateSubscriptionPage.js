@@ -12,12 +12,11 @@ function CreateSubscriptionPage() {
     building_type: [],
     number_of_rooms: [],
     standard: [],
-    minimum_price: 0,
-    maximum_price: 99999999999,
-    minimum_area: 0,
-    maximum_area: 99999999999,
+    minimum_price: '',
+    maximum_price: '',
+    minimum_area: '',
+    maximum_area: '',
     deposit: null,
-    floor_level: [],
     is_furnished: null,
     is_private_offer: null,
     bedrooms: [],
@@ -26,15 +25,12 @@ function CreateSubscriptionPage() {
   const navigate = useNavigate();
 
   const districtOptions = {
-    Warszawa: ['Śródmieście', 'Mokotów', 'Wola', 'Praga Południe', 'Bielany'],
-    krakow: ["Stare Miasto", "Grzegórzki", "Prądnik Czerwony", "Prądnik Biały", "Krowodrza", "Bronowice", "Zwierzyniec", "Dębniki", "Łagiewniki-Borek Fałęcki", "Swoszowice", "Podgórze Duchackie", "Bieżanów-Prokocim", "Podgórze", "Czyżyny", "Mistrzejowice", "Bieńczyce", "Wzgórza Krzesławickie", "Nowa Huta"],
-    Wrocław: ['Krzyki', 'Psie Pole', 'Śródmieście', 'Fabryczna'],
+    Kraków: ["Stare Miasto", "Grzegórzki", "Prądnik Czerwony", "Prądnik Biały", "Krowodrza", "Bronowice", "Zwierzyniec", "Dębniki", "Łagiewniki-Borek Fałęcki", "Swoszowice", "Podgórze Duchackie", "Bieżanów-Prokocim", "Podgórze", "Czyżyny", "Mistrzejowice", "Bieńczyce", "Wzgórza Krzesławickie", "Nowa Huta"],
   };
 
   const buildingTypes = ["Blok", "Kamienica", "Dom wolnostojący", "Szeregowiec", "Apartamentowiec", "Loft", "Pozostałe"];
   const roomOptions = ["1 pokój", "2 pokoje", "3 pokoje", "4 i więcej"];
   const standardOptions = ["niski", "normalny", "wysoki"];
-  const floorOptions = ["suterena", "parter", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10 i powyżej"];
   const bedroomOptions = ["1", "2", "3", "4", "5", "6", "6 i więcej"];
 
   const handleInputChange = (e) => {
@@ -301,25 +297,6 @@ function CreateSubscriptionPage() {
       case 11:
         return (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Preferowane piętro</h2>
-            <div className="grid grid-cols-3 gap-2">
-              {floorOptions.map(floor => (
-                <label key={floor} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={formData.floor_level.includes(floor)}
-                    onChange={() => handleArrayInputChange('floor_level', floor)}
-                    className="form-checkbox text-blue-600"
-                  />
-                  <span>{floor}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-        );
-      case 12:
-        return (
-          <div className="space-y-4">
             <h2 className="text-xl font-semibold">Liczba sypialni</h2>
             <div className="grid grid-cols-3 gap-2">
               {bedroomOptions.map(bedroom => (
@@ -336,7 +313,7 @@ function CreateSubscriptionPage() {
             </div>
           </div>
         );
-      case 13:
+      case 12:
         return (
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Podaj adres e-mail</h2>
@@ -349,7 +326,7 @@ function CreateSubscriptionPage() {
             />
           </div>
         );
-      case 14:
+      case 13:
         return (
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Podsumowanie subskrypcji</h2>
@@ -363,7 +340,6 @@ function CreateSubscriptionPage() {
               <p><strong>Cena:</strong> {formData.minimum_price} - {formData.maximum_price} PLN</p>
               <p><strong>Powierzchnia:</strong> {formData.minimum_area} - {formData.maximum_area} m²</p>
               <p><strong>Maksymalna kaucja:</strong> {formData.deposit} PLN</p>
-              <p><strong>Preferowane piętra:</strong> {formData.floor_level.join(', ')}</p>
               <p><strong>Umeblowane:</strong> {formData.is_furnished ? 'Tak' : 'Nie'}</p>
               <p><strong>Oferta prywatna:</strong> {formData.is_private_offer ? 'Tak' : 'Nie'}</p>
               <p><strong>Liczba sypialni:</strong> {formData.bedrooms.join(', ')}</p>
@@ -415,7 +391,7 @@ function CreateSubscriptionPage() {
                 </div>
                 <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
                   <div
-                    style={{ width: `${(step / 14) * 100}%` }}
+                    style={{ width: `${(step / 13) * 100}%` }}
                     className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-600"
                   ></div>
                 </div>

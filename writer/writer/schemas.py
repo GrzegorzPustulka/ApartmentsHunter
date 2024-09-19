@@ -6,7 +6,7 @@ class CreateOffer(BaseModel):
     price: float
     deposit: float | str
     standard: str
-    bedrooms: int
+    bedrooms: str
 
     # from Hunter
     title: str
@@ -17,6 +17,5 @@ class CreateOffer(BaseModel):
     area: float
     building_type: str
     number_of_rooms: str
-    floor_level: str | None = None
     is_furnished: bool
     is_private_offer: bool

@@ -3,7 +3,7 @@ Proszę podaj na podstawie danych: czynsz, czynsz administracyjny, kaucję, stan
 Zasady jakie wartości mogą mieć pola, nie dodawaj żadnych swoich informacji, trzymaj się zasad:
 - rent: dozwolone wartości: [kwota]
 - administrative_rent: dozwolone wartości: [kwota]
-- deposit: dozwolone wartości: [kwota, brak informacji, brak kaucji]
+- deposit: dozwolone wartości: [kwota, brak informacji]
     jeśli nie ma podanego w ogłoszeniu zwróc deposit: None
 - standard: dozwolone wartości: [niski, normalny, wyższy]
     Sugeruj się tylko zdjęciami.
@@ -28,9 +28,9 @@ Zasady jakie wartości mogą mieć pola, nie dodawaj żadnych swoich informacji,
     - łazienka: nowoczesne urządzenia, ładne wykończenia, dodatkowe udogodnienia jak podgrzewana podłoga
     - kuchnia: nowoczesne meble i urządzenia, często wyposażona w zmywarkę, nowoczesny design
     - ściany: świeżo pomalowane, nowoczesne kolory, brak jakichkolwiek uszkodzeń
-- bedrooms: dozwolone wartości: [liczba]
+- bedrooms: dozwolone wartości: [1 sypialnia, 2 sypialnie, 3 sypialnie, 4 i więcej]
     ilość sypialni staraj się wyciągać na podstawie opisu, ponieważ na zdjęciach cięzko to ocenic.
-    sypialnia to jest nieprzechodni pokój. wiec salon, salon z aneksem kuchennym to nie jest sypialnia.
+    sypialnia to jest nieprzechodni pokój. wiec salon z aneksem kuchennym to nie jest sypialnia.
 - liczby podawaj jako int lub float
 
 Przykład:
@@ -39,6 +39,6 @@ Przykład:
     "administrative_rent": 550,
     "deposit": 3500,
     "standard": "wyższy",
-    "bedrooms": 3
+    "bedrooms": 3 sypialnie
 }
 """
