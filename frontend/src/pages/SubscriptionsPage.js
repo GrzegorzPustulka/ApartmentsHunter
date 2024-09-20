@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import SubscriptionCard from '../components/subscriptions/SubscriptionCard';
 import useSubscriptions from '../hooks/useSubscriptions';
@@ -7,6 +7,11 @@ import { FaPlus } from 'react-icons/fa';
 
 function SubscriptionsPage() {
   const { subscriptions, handleDelete, handleToggleStatus } = useSubscriptions();
+  const navigate = useNavigate();
+
+  const handleEdit = (id) => {
+    navigate(`/subscriptions/edit/${id}`);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -24,7 +29,7 @@ function SubscriptionsPage() {
             </Link>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
             {subscriptions.length > 0 ? (
               subscriptions.map((sub) => (
                 <SubscriptionCard
@@ -32,6 +37,7 @@ function SubscriptionsPage() {
                   subscription={sub}
                   onDelete={handleDelete}
                   onToggleStatus={handleToggleStatus}
+                  onEdit={handleEdit}
                 />
               ))
             ) : (

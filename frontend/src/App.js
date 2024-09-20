@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import SubscriptionsPage from './pages/SubscriptionsPage';
 import CreateSubscriptionPage from './pages/CreateSubscriptionPage';
+import EditSubscriptionPage from './pages/EditSubscriptionPage';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/subscriptions" element={<SubscriptionsPage />} />
             <Route path="/subscriptions/create" element={<CreateSubscriptionPage />} />
+            <Route path="/subscriptions/edit/:id" element={<EditSubscriptionPage />} />
           </Route>
         </Routes>
       </Router>

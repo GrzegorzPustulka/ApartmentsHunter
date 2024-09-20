@@ -1,7 +1,8 @@
 from subscriptions.models import Subscription
 from subscriptions.schemas.subscriptions import SubscriptionCreate, SubscriptionUpdate
 from sqlalchemy.orm import Session
-from sqlalchemy import select, insert
+from sqlalchemy import select, insert, update
+from subscriptions.schemas.subscriptions import SubscriptionStatus
 from subscriptions.repository.base import BaseRepository
 
 
@@ -20,6 +21,13 @@ class SubscriptionRepository(
     ) -> None:
         values = {**subscription_in.model_dump(), "user_id": user_id}
         db.execute(insert(Subscription).values(values))
+        db.commit()
+
+    @staticmethod
+    def update_status(db: Session, id: str, new_status: SubscriptionStatus) -> None:
+        db.execute(
+            update(Subscription).where(Subscription.id == id).values(status=new_status)
+        )
         db.commit()
 
 

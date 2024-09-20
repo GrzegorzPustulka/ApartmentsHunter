@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaEdit, FaTrash, FaPause, FaPlay } from 'react-icons/fa';
 
-const SubscriptionCard = ({ subscription, onEdit, onDelete, onToggleStatus }) => {
+const SubscriptionCard = ({ subscription, onDelete, onToggleStatus, onEdit }) => {
   const [status, setStatus] = useState(subscription.status);
 
   useEffect(() => {
@@ -33,8 +33,8 @@ const SubscriptionCard = ({ subscription, onEdit, onDelete, onToggleStatus }) =>
   };
 
   return (
-    <div className={`bg-white overflow-hidden shadow rounded-lg ${status === 'paused' ? 'opacity-70' : ''}`}>
-      <div className="px-4 py-5 sm:p-6">
+    <div className={`bg-white overflow-hidden shadow rounded-lg ${status === 'paused' ? 'opacity-70' : ''} flex flex-col h-full`}>
+      <div className="px-4 py-5 sm:p-6 flex-grow">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-medium text-gray-900">Subskrypcja</h3>
           <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(status)}`}>
@@ -55,7 +55,7 @@ const SubscriptionCard = ({ subscription, onEdit, onDelete, onToggleStatus }) =>
           <p className="text-sm text-gray-600"><span className="font-medium">Liczba sypialni:</span> {subscription.bedrooms ? subscription.bedrooms.join(', ') : 'Brak'}</p>
         </div>
       </div>
-      <div className="px-4 py-4 sm:px-6 bg-gray-50 flex justify-end space-x-2">
+      <div className="px-4 py-4 sm:px-6 bg-gray-50 flex justify-end space-x-2 mt-auto">
         {status !== 'deleted' && (
           <>
             <button

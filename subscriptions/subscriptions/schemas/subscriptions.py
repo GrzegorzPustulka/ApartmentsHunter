@@ -17,7 +17,7 @@ class SubscriptionRead(SubscriptionCreate):
     status: SubscriptionStatus
 
 
-class SubscriptionUpdate(BaseModel):
+class SubscriptionUpdate(SubscriptionCreate):
     pass
 
 
