@@ -25,7 +25,6 @@ export const fetchSubscriptions = async (token) => {
   const response = await fetch(`${API_URL}/subscriptions`, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  if (!response.ok) throw new Error('Nie udało się pobrać subskrypcji');
   return response.json();
 };
 
@@ -59,6 +58,9 @@ export const updateSubscriptionStatus = async (token, id, newStatus) => {
     },
     body: JSON.stringify({ status: newStatus }),
   });
-  if (!response.ok) throw new Error('Nie udało się zmienić statusu subskrypcji');
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'Nie udało się zaktualizować statusu subskrypcji');
+  }
   return response.json();
 };

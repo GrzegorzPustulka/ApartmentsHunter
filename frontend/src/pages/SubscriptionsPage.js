@@ -1,4 +1,3 @@
-// src/pages/SubscriptionsPage.js
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
@@ -31,7 +30,7 @@ function SubscriptionsPage() {
                 <SubscriptionCard
                   key={sub.id}
                   subscription={sub}
-                  onDelete={() => handleDelete(sub.id)}
+                  onDelete={handleDelete}
                   onToggleStatus={handleToggleStatus}
                 />
               ))

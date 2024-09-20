@@ -1,5 +1,5 @@
 from uuid import UUID, uuid4
-from sqlalchemy import String, ARRAY, Integer, ForeignKey
+from sqlalchemy import String, ARRAY, ForeignKey
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
@@ -7,6 +7,14 @@ from sqlalchemy.orm import (
     declared_attr,
     relationship,
 )
+from sqlalchemy import Enum as SQLAlchemyEnum
+from enum import Enum
+
+
+class SubscriptionStatus(Enum):
+    ACTIVE = "active"
+    PAUSED = "paused"
+    DELETED = "deleted"
 
 
 class Base(DeclarativeBase):
@@ -46,7 +54,7 @@ class Subscription(Base):
     is_private_offer: Mapped[bool | None]
     bedrooms: Mapped[list[str] | None] = mapped_column(ARRAY(String))
     standard: Mapped[list[str] | None] = mapped_column(ARRAY(String))
-
+    status: Mapped[str] = mapped_column(String, default=SubscriptionStatus.ACTIVE.value)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     user: Mapped["UUID"] = relationship("User", back_populates="subscriptions")
 
