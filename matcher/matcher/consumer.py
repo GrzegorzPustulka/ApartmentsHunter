@@ -26,11 +26,12 @@ class MongoStreamConsumer:
         record = change.get("fullDocument")
 
         with SessionLocal() as session:
-            # subs = subscription_repository.get_all(session)
-            # if not subs:
+            # subscriptions = subscription_repository.get_all(session)
+            # active_subscriptions = [sub for sub in subscriptions if sub.status == "active"]
+            # if not active_subscriptions:
             #     return
 
-            # for sub in subs:
+            # for sub in active_subscriptions:
             #     params = ApartmentParams(**sub.as_dict())
             #     query = build_query(params)
             #

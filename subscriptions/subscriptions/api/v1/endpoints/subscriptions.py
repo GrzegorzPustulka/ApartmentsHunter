@@ -18,7 +18,8 @@ router = APIRouter(prefix="/subscriptions", tags=["subscriptions"])
 async def create_offer(
     current_user: CurrentUser, subscription: SubscriptionCreate, db: DB
 ):
-    active_subscriptions = sub_repository.get_by_user_id(db, current_user.id)
+    subscriptions = sub_repository.get_by_user_id(db, current_user.id)
+    active_subscriptions = [sub for sub in subscriptions if sub.status == "active"]
     if len(active_subscriptions) >= current_user.subscription_limit:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
