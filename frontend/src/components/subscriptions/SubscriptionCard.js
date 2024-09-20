@@ -1,8 +1,13 @@
-// src/components/subscriptions/SubscriptionCard.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaEdit, FaTrash, FaPause, FaPlay } from 'react-icons/fa';
 
 const SubscriptionCard = ({ subscription, onEdit, onDelete, onToggleStatus }) => {
+  const [status, setStatus] = useState(subscription.status);
+
+  useEffect(() => {
+    setStatus(subscription.status);
+  }, [subscription.status]);
+
   const getStatusColor = (status) => {
     switch(status) {
       case 'active': return 'bg-green-100 text-green-800';
@@ -21,13 +26,19 @@ const SubscriptionCard = ({ subscription, onEdit, onDelete, onToggleStatus }) =>
     }
   };
 
+  const handleToggleStatus = async () => {
+    const newStatus = status === 'active' ? 'paused' : 'active';
+    await onToggleStatus(subscription.id, newStatus);
+    setStatus(newStatus);
+  };
+
   return (
-    <div className={`bg-white overflow-hidden shadow rounded-lg ${subscription.status === 'paused' ? 'opacity-70' : ''}`}>
+    <div className={`bg-white overflow-hidden shadow rounded-lg ${status === 'paused' ? 'opacity-70' : ''}`}>
       <div className="px-4 py-5 sm:p-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-medium text-gray-900">Subskrypcja</h3>
-          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(subscription.status)}`}>
-            {getStatusText(subscription.status)}
+          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(status)}`}>
+            {getStatusText(status)}
           </span>
         </div>
         <div className="space-y-2">
@@ -45,14 +56,14 @@ const SubscriptionCard = ({ subscription, onEdit, onDelete, onToggleStatus }) =>
         </div>
       </div>
       <div className="px-4 py-4 sm:px-6 bg-gray-50 flex justify-end space-x-2">
-        {subscription.status !== 'deleted' && (
+        {status !== 'deleted' && (
           <>
             <button
-              onClick={() => onToggleStatus(subscription.id, subscription.status === 'active' ? 'paused' : 'active')}
+              onClick={handleToggleStatus}
               className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
-              title={subscription.status === 'active' ? "Wstrzymaj subskrypcję" : "Aktywuj subskrypcję"}
+              title={status === 'active' ? "Wstrzymaj subskrypcję" : "Aktywuj subskrypcję"}
             >
-              {subscription.status === 'active' ? <FaPause /> : <FaPlay />}
+              {status === 'active' ? <FaPause /> : <FaPlay />}
             </button>
             <button
               onClick={() => onEdit(subscription.id)}

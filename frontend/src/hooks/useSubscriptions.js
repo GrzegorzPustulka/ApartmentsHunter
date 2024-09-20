@@ -1,5 +1,4 @@
-// src/hooks/useSubscriptions.js
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { fetchSubscriptions, updateSubscriptionStatus, deleteSubscription } from '../utils/api';
 
@@ -7,34 +6,44 @@ const useSubscriptions = () => {
   const [subscriptions, setSubscriptions] = useState([]);
   const { token } = useContext(AuthContext);
 
-  useEffect(() => {
+  const fetchSubscriptionsData = useCallback(async () => {
     if (token) {
-      fetchSubscriptions(token).then(setSubscriptions);
+      try {
+        const data = await fetchSubscriptions(token);
+        setSubscriptions(data);
+      } catch (error) {
+        console.error("Błąd podczas pobierania subskrypcji:", error);
+      }
     }
   }, [token]);
 
+  useEffect(() => {
+    fetchSubscriptionsData();
+  }, [fetchSubscriptionsData]);
+
   const handleToggleStatus = async (id, newStatus) => {
     try {
-      const updatedSubscription = await updateSubscriptionStatus(token, id, newStatus);
-      setSubscriptions(subscriptions.map(sub =>
-        sub.id === id ? { ...sub, status: updatedSubscription.status } : sub
-      ));
+      await updateSubscriptionStatus(token, id, newStatus);
+      setSubscriptions(prevSubscriptions =>
+        prevSubscriptions.map(sub =>
+          sub.id === id ? { ...sub, status: newStatus } : sub
+        )
+      );
     } catch (error) {
       console.error("Błąd podczas zmiany statusu subskrypcji:", error);
+      // Możesz tutaj dodać obsługę błędów, np. wyświetlenie komunikatu dla użytkownika
     }
   };
 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Czy na pewno chcesz usunąć tę subskrypcję?");
-    if (!confirmDelete) return;
-
     try {
       await deleteSubscription(token, id);
-      setSubscriptions(subscriptions.map(sub =>
-        sub.id === id ? { ...sub, status: 'deleted' } : sub
-      ));
+      setSubscriptions(prevSubscriptions =>
+        prevSubscriptions.filter(sub => sub.id !== id)
+      );
     } catch (error) {
       console.error("Błąd podczas usuwania subskrypcji:", error);
+      // Możesz tutaj dodać obsługę błędów, np. wyświetlenie komunikatu dla użytkownika
     }
   };
 
