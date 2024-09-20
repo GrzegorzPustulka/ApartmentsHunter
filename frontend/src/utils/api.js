@@ -64,3 +64,27 @@ export const updateSubscriptionStatus = async (token, id, newStatus) => {
   }
   return response.json();
 };
+
+
+export const getSubscription = async (token, id) => {
+  const response = await fetch(`${API_URL}/subscriptions/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!response.ok) throw new Error('Nie udało się pobrać subskrypcji');
+  return response.json();
+};
+
+export const updateSubscription = async (token, id, data) => {
+  const response = await fetch(`${API_URL}/subscriptions/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+};

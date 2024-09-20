@@ -32,20 +32,8 @@ class BaseRepository(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db.execute(delete(self.model).where(self.model.id == id))
         db.commit()
 
-    def update_status(
-        self, db: Session, id: str, new_status: SubscriptionStatus
-    ) -> None:
+    def update(self, db: Session, id: str, obj_in: UpdateSchemaType) -> None:
         db.execute(
-            update(self.model).where(self.model.id == id).values(status=new_status)
+            update(self.model).where(self.model.id == id).values(obj_in.model_dump())
         )
         db.commit()
-
-    # def update(self, db: Session, id: str, obj_in: UpdateSchemaType) -> ModelType:
-    #     result = db.execute(
-    #         update(self.model)
-    #         .where(self.model.id == id)
-    #         .values(obj_in.model_dump())
-    #         .returning(self.model)
-    #     )
-    #     db.commit()
-    #     return result.scalar_one()
