@@ -1,10 +1,10 @@
 from pydantic import BaseModel
 
 
-class CreateOffer(BaseModel):
+class ApartmentCreate(BaseModel):
     # from Pricer
     price: float
-    deposit: float | str
+    deposit: float | None = None
     standard: str
     bedrooms: str
 
