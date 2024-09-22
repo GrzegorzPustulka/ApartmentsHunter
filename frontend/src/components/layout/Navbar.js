@@ -1,10 +1,14 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { AuthContext } from '../../context/AuthContext';
-import { FaHome, FaUser } from 'react-icons/fa';
+import { Link, useLocation } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';import { FaHome, FaUser } from 'react-icons/fa';
 
 const Navbar = () => {
   const { token, logout } = useContext(AuthContext);
+  const location = useLocation();
+
+  if (location.pathname.includes('/reset-password')) {
+    return null;
+  }
 
   return (
     <nav className="bg-white shadow-md">

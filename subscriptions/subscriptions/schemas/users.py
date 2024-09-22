@@ -11,8 +11,9 @@ class UserUpdate(UserCreate):
     pass
 
 
-class UserRead(UserCreate):
+class UserRead(BaseModel):
     id: UUID
+    email: EmailStr
     subscription_limit: int
 
 

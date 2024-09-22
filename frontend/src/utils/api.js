@@ -89,20 +89,41 @@ export const updateSubscription = async (token, id, data) => {
   }
 };
 
+export const getUserInfo = async (token) => {
+  const response = await fetch(`${API_URL}/users/me`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Nie udało się pobrać informacji o użytkowniku');
+  }
+
+  const data = await response.json();
+  return {
+    id: data.id,
+    email: data.email,
+    subscription_limit: data.subscription_limit
+  };
+};
+
 export const requestPasswordReset = async (token, email) => {
   const response = await fetch(`${API_URL}/users/request-password-reset`, {
     method: 'POST',
     headers: {
+      'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ email }),
   });
 
   if (!response.ok) {
-    throw new Error('Nie udało się wysłać żądania resetowania hasła');
+    const errorData = await response.json();
+    throw new Error(errorData.detail || 'Nie udało się wysłać żądania resetowania hasła');
   }
 };
+
 
 
 export const resetPassword = async (token, currentPassword, newPassword) => {

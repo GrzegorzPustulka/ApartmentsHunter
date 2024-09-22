@@ -1,12 +1,13 @@
 from fastapi.security import OAuth2PasswordRequestForm
 
-from subscriptions.api.v1.dependencies import DB
+from subscriptions.api.v1.dependencies import DB, CurrentUser
 from fastapi import APIRouter, Depends, HTTPException, status
 from subscriptions.schemas.users import (
     UserCreate,
     Token,
     PasswordResetRequest,
     PasswordReset,
+    UserRead,
 )
 from subscriptions.repository.users import user as user_repository
 from subscriptions.core.config import settings
@@ -78,3 +79,8 @@ async def reset_password(token: str, reset_request: PasswordReset, db: DB):
     user_repository.update_password(db, user.id, reset_request.new_password)
 
     return {"message": "Password has been reset successfully"}
+
+
+@router.get("/me", response_model=UserRead)
+async def read_users_me(current_user: CurrentUser, db: DB):
+    return UserRead.model_validate(current_user.as_dict())
