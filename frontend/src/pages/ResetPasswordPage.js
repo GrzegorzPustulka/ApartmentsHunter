@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { resetPassword } from '../utils/api';
-import Navbar from '../components/layout/Navbar';
+import { AuthContext } from '../context/AuthContext';
 
 const ResetPasswordPage = () => {
   const [currentPassword, setCurrentPassword] = useState('');
@@ -11,6 +11,11 @@ const ResetPasswordPage = () => {
   const [message, setMessage] = useState('');
   const { token } = useParams();
   const navigate = useNavigate();
+  const { logout } = useContext(AuthContext);
+
+  useEffect(() => {
+    logout();
+  }, [logout]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,12 +37,15 @@ const ResetPasswordPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Navbar />
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">Zmień hasło</h1>
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          Zmień hasło
+        </h2>
+      </div>
 
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           {message && <div className="mb-4 p-2 bg-green-100 text-green-700 rounded">{message}</div>}
           {error && <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">{error}</div>}
 
@@ -52,7 +60,7 @@ const ResetPasswordPage = () => {
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
             <div>
@@ -65,7 +73,7 @@ const ResetPasswordPage = () => {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
             <div>
@@ -78,12 +86,12 @@ const ResetPasswordPage = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
             <button
               type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Zmień hasło
             </button>
