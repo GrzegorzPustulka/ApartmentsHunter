@@ -59,10 +59,27 @@ class Subscription(Base):
     user: Mapped["UUID"] = relationship("User", back_populates="subscriptions")
 
 
+class Apartment(Base):
+    link: Mapped[str] = mapped_column(unique=True)
+    city: Mapped[str]
+    district: Mapped[str]
+    price: Mapped[float]
+    deposit: Mapped[float | None]
+    standard: Mapped[str]
+    bedrooms: Mapped[str]
+    title: Mapped[str]
+    date: Mapped[str]
+    area: Mapped[float]
+    building_type: Mapped[str]
+    number_of_rooms: Mapped[str]
+    is_furnished: Mapped[bool]
+    is_private_offer: Mapped[bool]
+
+
 class User(Base):
     email: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
-    subscription_limit: Mapped[int] = mapped_column(default=1)
+    subscription_limit: Mapped[int] = mapped_column(default=3)
 
     subscriptions: Mapped[list["Subscription"]] = relationship(
         "Subscription", back_populates="user", cascade="all, delete-orphan"
