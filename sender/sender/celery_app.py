@@ -21,5 +21,6 @@ celery_app.conf.task_default_exchange = "sender"
 celery_app.conf.task_default_routing_key = "sender.default"
 
 celery_app.conf.task_routes = {
-    "sender.tasks.process_offer_in_sender": {"queue": "sender_queue"},
+    "sender.tasks.send_apartment_notification_task": {"queue": "sender_queue"},
+    "sender.tasks.send_password_reset_email": {"queue": "sender_queue"},
 }

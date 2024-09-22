@@ -1,84 +1,80 @@
-from typing import Any
-
-from sender.config import settings
-import smtplib
+from typing import Any, Dict
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import smtplib
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+from sender.config import settings
+
+
+class EmailTemplate:
+    APARTMENT_NOTIFICATION = "apartment_notification.html"
+    PASSWORD_RESET = "password_reset.html"
 
 
 class EmailService:
-    def __init__(self, receiver: str):
+    def __init__(self):
         self.sender = settings.sender_email
-        self.password = settings.smtp_password.get_secret_value()
         self.smtp_server = settings.smtp_server
         self.smtp_port = settings.smtp_port
-        self.receiver = receiver
+        self.jinja_env = Environment(
+            loader=FileSystemLoader("sender/templates"),
+            autoescape=select_autoescape(["html", "xml"]),
+        )
 
-    def send_email(self, data: dict[str, Any]) -> None:
-        message = self.create_email_content(data)
+    def send_email(
+        self, receiver: str, subject: str, template: str, data: Dict[str, Any]
+    ) -> None:
+        message = self._create_email_content(receiver, subject, template, data)
 
         with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
-            server.login(self.sender, self.password)
-            server.sendmail(self.sender, self.receiver, message.as_string())
+            server.send_message(message)
 
-    def create_email_content(self, data: dict[str, Any]) -> MIMEMultipart:
+    def _create_email_content(
+        self, receiver: str, subject: str, template: str, data: Dict[str, Any]
+    ) -> MIMEMultipart:
         message = MIMEMultipart("alternative")
-        message["Subject"] = "ApartmentsHunter - mieszkanie"
+        message["Subject"] = subject
         message["From"] = self.sender
-        message["To"] = self.receiver
+        message["To"] = receiver
 
-        text = f"""
-        Witaj,
+        html_template = self.jinja_env.get_template(template)
+        html_content = html_template.render(**data)
 
-        Znaleziono nowe mieszkanie zgodne z Twoimi kryteriami:
+        text_content = self._html_to_plain_text(html_content)
 
-        Tytuł: {data.get('title')}
-        Lokalizacja: {data.get('city')}, {data.get('district')}
-        Data publikacji: {data.get('date')}
-        Cena: {data.get('price')} PLN
-        Kaucja: {data.get('deposit')}
-        Standard: {data.get('standard')}
-        Powierzchnia: {data.get('area')} m²
-        Typ budynku: {data.get('building_type')}
-        Liczba pokoi: {data.get('number_of_rooms')}
-        Liczba sypialni: {data.get('bedrooms')}
-        Meble: {"Tak" if data.get('is_furnished') else "Nie"}
-        Oferta prywatna: {"Tak" if data.get('is_private_offer') else "Nie"}
-        Link do ogłoszenia: {data.get('link')}
-
-        Pozdrawiamy,
-        ApartmentsHunter
-        """
-
-        html = f"""
-        <html>
-        <body>
-            <p>Witaj,</p>
-            <p>Znaleziono nowe mieszkanie zgodne z Twoimi kryteriami:</p>
-            <ul>
-                <li><strong>Tytuł:</strong> {data.get('title')}</li>
-                <li><strong>Lokalizacja:</strong> {data.get('city')}, {data.get('district')}</li>
-                <li><strong>Data publikacji:</strong> {data.get('date')}</li>
-                <li><strong>Cena:</strong> {data.get('price')} PLN</li>
-                <li><strong>Kaucja:</strong> {data.get('deposit')}</li>
-                <li><strong>Standard:</strong> {data.get('standard')}</li>
-                <li><strong>Powierzchnia:</strong> {data.get('area')} m²</li>
-                <li><strong>Typ budynku:</strong> {data.get('building_type')}</li>
-                <li><strong>Liczba pokoi:</strong> {data.get('number_of_rooms')}</li>
-                <li><strong>Liczba sypialni:</strong> {data.get('bedrooms')}</li>
-                <li><strong>Meble:</strong> {"Tak" if data.get('is_furnished') else "Nie"}</li>
-                <li><strong>Oferta prywatna:</strong> {"Tak" if data.get('is_private_offer') else "Nie"}</li>
-                <li><strong>Link do ogłoszenia:</strong> <a href="{data.get('link')}">Kliknij tutaj</a></li>
-            </ul>
-            <p>Pozdrawiamy,<br> ApartmentsHunter</p>
-        </body>
-        </html>
-        """
-
-        part1 = MIMEText(text, "plain")
-        part2 = MIMEText(html, "html")
+        part1 = MIMEText(text_content, "plain")
+        part2 = MIMEText(html_content, "html")
 
         message.attach(part1)
         message.attach(part2)
 
         return message
+
+    def _html_to_plain_text(self, html: str) -> str:
+        return (
+            html.replace("<br>", "\n")
+            .replace("</p>", "\n\n")
+            .replace("<li>", "- ")
+            .replace("</li>", "\n")
+        )
+
+
+email_service = EmailService()
+
+
+def send_apartment_notification(receiver: str, data: Dict[str, Any]) -> None:
+    email_service.send_email(
+        receiver=receiver,
+        subject="ApartmentsHunter - Nowe mieszkanie",
+        template=EmailTemplate.APARTMENT_NOTIFICATION,
+        data=data,
+    )
+
+
+def send_password_reset_email(receiver: str, reset_link: str) -> None:
+    email_service.send_email(
+        receiver=receiver,
+        subject="ApartmentsHunter - Reset hasła",
+        template=EmailTemplate.PASSWORD_RESET,
+        data={"reset_link": reset_link},
+    )

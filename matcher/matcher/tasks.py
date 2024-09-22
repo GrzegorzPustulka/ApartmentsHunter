@@ -3,7 +3,9 @@ from typing import Any
 
 
 @celery_app.task()
-def send_to_sender(offer: dict[str, Any], data: dict[str, str]) -> None:
+def send_to_sender(email: str, data: dict[str, str]) -> None:
     celery_app.send_task(
-        "sender.tasks.process_offer_in_sender", args=[offer, data], queue="sender_queue"
+        "sender.tasks.send_apartment_notification",
+        args=[email, data],
+        queue="sender_queue",
     )

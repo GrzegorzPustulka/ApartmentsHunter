@@ -1,17 +1,10 @@
-// src/components/layout/Navbar.js
 import React, { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { FaHome } from 'react-icons/fa';
+import { FaHome, FaUser } from 'react-icons/fa';
 
 const Navbar = () => {
   const { token, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   return (
     <nav className="bg-white shadow-md">
@@ -31,6 +24,10 @@ const Navbar = () => {
                   <Link to="/subscriptions/create" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
                     Nowa subskrypcja
                   </Link>
+                  <Link to="/account" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                    <FaUser className="inline mr-1" />
+                    Konto
+                  </Link>
                 </>
               )}
             </div>
@@ -38,7 +35,7 @@ const Navbar = () => {
           <div className="flex items-center">
             {token ? (
               <button
-                onClick={handleLogout}
+                onClick={logout}
                 className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
               >
                 Wyloguj się

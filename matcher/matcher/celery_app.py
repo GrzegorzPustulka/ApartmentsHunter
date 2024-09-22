@@ -20,5 +20,5 @@ celery_app.conf.task_default_exchange = "matcher"
 celery_app.conf.task_default_routing_key = "matcher.default"
 
 celery_app.conf.task_routes = {
-    "matcher.tasks.process_offer_in_sender": {"queue": "matcher_queue"},
+    "matcher.tasks.send_apartment_notification_task": {"queue": "matcher_queue"},
 }

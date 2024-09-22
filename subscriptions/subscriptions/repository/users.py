@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import select
+from sqlalchemy import select, update
 from subscriptions.models import User
 from subscriptions.schemas.users import UserCreate, UserUpdate
 from subscriptions.core.security import get_password_hash, verify_password
@@ -24,6 +24,14 @@ class UserRepository(BaseRepository[User, UserCreate, UserUpdate]):
         if not verify_password(password, db_user.password):
             return None
         return db_user
+
+    @staticmethod
+    def update_password(db: Session, id: int, new_password: str) -> None:
+        hashed_password = get_password_hash(new_password)
+        db.execute(
+            update(User).where(User.id == id).values({"password": hashed_password})
+        )
+        db.commit()
 
 
 user = UserRepository(User)
