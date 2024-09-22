@@ -24,3 +24,23 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return bcrypt.checkpw(
         plain_password.encode("utf-8"), hashed_password.encode("utf-8")
     )
+
+
+def create_password_reset_token(email: str) -> str:
+    delta = timedelta(minutes=settings.email_reset_token_expire_minutes)
+    now = datetime.now(timezone.utc)
+    expires = now + delta
+    exp = expires.timestamp()
+    encoded_jwt = jwt.encode(
+        {"exp": exp, "nbf": now, "sub": email},
+        settings.secret_key,
+        algorithm=settings.algorithm,
+    )
+    return encoded_jwt
+
+
+def verify_password_reset_token(token: str) -> str:
+    decoded_token = jwt.decode(
+        token, settings.secret_key, algorithms=[settings.algorithm]
+    )
+    return decoded_token["sub"]

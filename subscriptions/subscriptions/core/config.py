@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     # DATABASE
     db_user: str = "postgres"
     db_password: SecretStr = SecretStr("SecretPassword")
-    db_host: str = "localhost"
+    db_host: str = "postgres"
     db_port: int = 5432
     db_name: str = "database"
 
@@ -16,6 +16,21 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 60 * 24 * 8  # 8 days
     algorithm: str = "HS256"
     secret_key: str = secrets.token_urlsafe(32)
+    email_reset_token_expire_minutes: int = 60 * 24  # 1 day
+    frontend_url: str = "http://localhost:3000"
+
+    # Redis
+    redis_host: str = "redis"
+    redis_port: int = 6379
+    redis_db: int = 0
+
+    # RabbitMQ
+    rabbit_host: str = "rabbitmq"
+    rabbit_user: str = "guest"
+    rabbit_password: SecretStr = SecretStr("guest")
+    rabbit_url: str = (
+        f"pyamqp://{rabbit_user}:{rabbit_password.get_secret_value()}@{rabbit_host}//"
+    )
 
     @property
     def sqlalchemy_database_uri(self) -> PostgresDsn:

@@ -43,4 +43,4 @@ class MongoStreamConsumer:
                 "user_email": "example@gmail.com",
             }
             del record["_id"]
-            send_to_sender(record, data)
+            send_to_sender("example@gmail.com", record)

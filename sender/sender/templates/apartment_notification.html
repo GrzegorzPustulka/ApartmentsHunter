@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <p>Witaj,</p>
+    <p>Znaleziono nowe mieszkanie zgodne z Twoimi kryteriami:</p>
+    <ul>
+        <li><strong>Tytuł:</strong> {{ title }}</li>
+        <li><strong>Lokalizacja:</strong> {{ city }}, {{ district }}</li>
+        <li><strong>Data publikacji:</strong> {{ date }}</li>
+        <li><strong>Cena:</strong> {{ price }} PLN</li>
+        <li><strong>Kaucja:</strong> {{ deposit }}</li>
+        <li><strong>Standard:</strong> {{ standard }}</li>
+        <li><strong>Powierzchnia:</strong> {{ area }} m²</li>
+        <li><strong>Typ budynku:</strong> {{ building_type }}</li>
+        <li><strong>Liczba pokoi:</strong> {{ number_of_rooms }}</li>
+        <li><strong>Liczba sypialni:</strong> {{ bedrooms }}</li>
+        <li><strong>Meble:</strong> {{ "Tak" if is_furnished else "Nie" }}</li>
+        <li><strong>Oferta prywatna:</strong> {{ "Tak" if is_private_offer else "Nie" }}</li>
+        <li><strong>Link do ogłoszenia:</strong> <a href="{{ link }}">Kliknij tutaj</a></li>
+    </ul>
+    <p>Pozdrawiamy,<br> ApartmentsHunter</p>
+</body>
+</html>

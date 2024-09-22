@@ -88,3 +88,33 @@ export const updateSubscription = async (token, id, data) => {
     throw new Error(`HTTP error! status: ${response.status}`);
   }
 };
+
+export const requestPasswordReset = async (token, email) => {
+  const response = await fetch(`${API_URL}/users/request-password-reset`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Nie udało się wysłać żądania resetowania hasła');
+  }
+};
+
+
+export const resetPassword = async (token, currentPassword, newPassword) => {
+  const response = await fetch(`${API_URL}/users/reset-password/${token}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Nie udało się zresetować hasła');
+  }
+};

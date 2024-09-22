@@ -23,3 +23,11 @@ class Token(BaseModel):
 
 class TokenPayload(BaseModel):
     sub: str | None = None
+
+
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+
+
+class PasswordReset(BaseModel):
+    new_password: str

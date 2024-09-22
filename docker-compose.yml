@@ -129,8 +129,26 @@ services:
       - "8000:8000"
     container_name: subscriptions
     command: bash -c "alembic upgrade head && poetry run uvicorn subscriptions.main:app --host 0.0.0.0 --port 8000 --reload"
+    volumes:
       - ./subscriptions:/app
     depends_on:
+      - postgres
+      - rabbitmq
+      - redis
+    env_file:
+      - .env
+
+  subscriptions_worker:
+    build:
+      context: ./subscriptions
+      dockerfile: Dockerfile
+    container_name: subscriptions_worker
+    command: poetry run celery -A subscriptions.celery_app worker --loglevel=info
+    volumes:
+      - ./subscriptions:/app
+    depends_on:
+      - rabbitmq
+      - redis
       - postgres
     env_file:
       - .env
