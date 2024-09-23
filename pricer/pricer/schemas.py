@@ -2,8 +2,8 @@ from pydantic import BaseModel
 
 
 class PricerSchema(BaseModel):
-    rent: int | float
-    administrative_rent: int | float | None = None
-    deposit: int | float | str
+    rent: float
+    administrative_rent: float | None = None
+    deposit: float | None = None
     standard: str
     bedrooms: str
