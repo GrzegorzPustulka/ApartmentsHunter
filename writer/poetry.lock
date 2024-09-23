@@ -134,7 +134,7 @@ pymongo = "^4.8.0"
 type = "git"
 url = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git"
 reference = "HEAD"
-resolved_reference = "fbbcbede1c29209c93c1ab1c8197c1af4522a336"
+resolved_reference = "07c00b5fe857cfabcc1e31115b1276031dc2555d"
 subdirectory = "catalogue"
 
 [[package]]
@@ -1383,7 +1383,7 @@ uvicorn = "^0.30.1"
 type = "git"
 url = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git"
 reference = "HEAD"
-resolved_reference = "fbbcbede1c29209c93c1ab1c8197c1af4522a336"
+resolved_reference = "07c00b5fe857cfabcc1e31115b1276031dc2555d"
 subdirectory = "subscriptions"
 
 [[package]]
@@ -1709,4 +1709,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "312f0b8e605b05048621ce80aee03cf9d4652317939593c865df8036ff9ae823"
+content-hash = "648c42ac105a0fcc1e855152823ec2a754a094bede891d2232dd50db2cb3eb5d"
