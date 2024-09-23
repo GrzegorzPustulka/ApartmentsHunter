@@ -1,7 +1,6 @@
 from bson import ObjectId
 from pydantic import BaseModel, Field, model_validator, field_validator
-from catalogue.resources.districts import get_district
-from catalogue.resources.cities import get_city
+from catalogue.resources.data import get_district, get_city
 from typing import Literal
 
 
@@ -41,6 +40,7 @@ class ApartmentParams(BaseModel):
     def validate_params(self) -> "ApartmentParams":
         self.validate_area()
         self.validate_price()
+        self.validate_city()
         self.validate_district()
         return self
 
@@ -60,11 +60,14 @@ class ApartmentParams(BaseModel):
         ):
             raise ValueError("Maximum price must be less than minimum price")
 
+    def validate_city(self):
+        if self.city not in get_city():
+            raise ValueError(f"{self.city} is not a valid city")
+
     def validate_district(self):
-        if self.district and self.city:
-            city = get_city(self.city)
+        if self.district:
             for district in self.district:
-                if district not in get_district(city):
+                if district not in get_district(self.city):
                     raise ValueError(f"{district} is not supported for {self.city}.")
 
 
