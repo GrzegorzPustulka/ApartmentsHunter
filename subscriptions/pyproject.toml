@@ -7,6 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 catalogue = { git = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git", subdirectory = "catalogue" }
+writer = { git = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git", subdirectory = "writer" }
 python = "^3.12"
 uvicorn = "^0.30.1"
 pydantic = "^2.7.4"

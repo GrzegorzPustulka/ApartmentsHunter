@@ -16,3 +16,12 @@ def process_offer(prices: dict[str, Any], offer: dict[str, Any]) -> None:
         apartment_repository.create(db_session, offer)
     finally:
         db_session.close()
+
+
+@celery_app.task()
+def send_to_sender(email: str, data: dict[str, str]) -> None:
+    celery_app.send_task(
+        "sender.tasks.send_apartment_notification",
+        args=[email, data],
+        queue="sender_queue",
+    )

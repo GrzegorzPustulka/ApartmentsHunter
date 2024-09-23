@@ -21,4 +21,5 @@ celery_app.conf.task_default_routing_key = "writer.default"
 
 celery_app.conf.task_routes = {
     "writer.tasks.tasks.process_offer_in_pricer": {"queue": "writer_queue"},
+    "writer.tasks.tasks.send_apartment_notification_task": {"queue": "writer_queue"},
 }
