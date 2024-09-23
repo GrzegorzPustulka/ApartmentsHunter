@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     # Scraper
     olx_base_url: str = "https://www.olx.pl/nieruchomosci/mieszkania/wynajem/"
     cities: list[str] = [
-        "krakow",
+        "Kraków",
         # "warszawa",
         # "poznan",
         # "wroclaw",
