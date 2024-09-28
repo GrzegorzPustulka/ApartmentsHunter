@@ -2,6 +2,7 @@ from subscriptions.database import engine
 import psycopg2
 import select
 import time
+import json
 from uuid import UUID
 from writer.tasks.tasks import send_to_sender
 from subscriptions.database import SessionLocal
@@ -11,8 +12,8 @@ from subscriptions.repository.subscriptions import (
 from writer.repositories.apartments import apartment_repository
 
 
-def process_notification(payload: dict[str, UUID]) -> None:
-    id = payload["id"]
+def process_notification(notify) -> None:
+    id = UUID(notify.payload)
 
     with SessionLocal() as session:
         apartment = apartment_repository.get_by_id(session, id)
@@ -49,7 +50,7 @@ def listen_notifications() -> None:
                 conn.poll()
                 while conn.notifies:
                     notify = conn.notifies.pop(0)
-                    process_notification(notify.payload)
+                    process_notification(notify)
     except KeyboardInterrupt:
         pass
     except (psycopg2.OperationalError, psycopg2.InterfaceError):
