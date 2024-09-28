@@ -23,4 +23,6 @@ RUN poetry config virtualenvs.create false \
 
 COPY . .
 
+ENV PYTHONPATH=/app
+
 CMD ["poetry", "run", "celery", "--help"]
