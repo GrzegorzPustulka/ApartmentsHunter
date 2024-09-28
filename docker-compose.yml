@@ -47,7 +47,7 @@ services:
     build:
       context: ./writer
       dockerfile: Dockerfile
-    container_name: writer
+    container_name: writer_worker
     command: poetry run celery -A writer.celery_app worker --loglevel=info
     volumes:
       - ./writer:/app
@@ -57,14 +57,14 @@ services:
       - postgres
     env_file:
       - .env
-  worker:
+  writer:
     build:
-      context: ./worker
+      context: ./writer
       dockerfile: Dockerfile
-    container_name: worker
-    command: poetry run python worker/main.py
+    container_name: writer
+    command: poetry run python writer/main.py
     volumes:
-      - ./worker:/app
+      - ./writer:/app
     depends_on:
       - rabbitmq
       - redis

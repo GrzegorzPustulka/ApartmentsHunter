@@ -134,7 +134,7 @@ pymongo = "^4.8.0"
 type = "git"
 url = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git"
 reference = "HEAD"
-resolved_reference = "100f93600b12ad6f87b2b1ac3847ea204bd67725"
+resolved_reference = "b4fb32617d2f9422788075d614e12386213ceeb1"
 subdirectory = "catalogue"
 
 [[package]]
@@ -1676,31 +1676,7 @@ files = [
     {file = "websockets-13.1.tar.gz", hash = "sha256:a3b3366087c1bc0a2795111edcadddb8b3b59509d5db5d7ea3fdd69f954a8878"},
 ]
 
-[[package]]
-name = "writer"
-version = "0.1.0"
-description = ""
-optional = false
-python-versions = "^3.12"
-files = []
-develop = false
-
-[package.dependencies]
-celery = "^5.4.0"
-pydantic = "^2.8.2"
-pydantic-settings = "^2.3.4"
-redis = "^5.0.7"
-sqlalchemy = "^2.0.32"
-subscriptions = {git = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git", subdirectory = "subscriptions"}
-
-[package.source]
-type = "git"
-url = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git"
-reference = "HEAD"
-resolved_reference = "100f93600b12ad6f87b2b1ac3847ea204bd67725"
-subdirectory = "writer"
-
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "4b1f45fc7f1e795669676b1db9d6aa6a96b852133d0e99e7f37ea47bb0fbdca1"
+content-hash = "9324a7593b8722473e8e4b339456dd47e3c9a04c9734da018f978227fbec2b24"
