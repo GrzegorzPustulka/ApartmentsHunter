@@ -43,7 +43,7 @@ services:
     env_file:
       - .env
 
-  writer:
+  writer_worker:
     build:
       context: ./writer
       dockerfile: Dockerfile
@@ -54,9 +54,23 @@ services:
     depends_on:
       - rabbitmq
       - redis
+      - postgres
     env_file:
       - .env
-
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    container_name: worker
+    command: poetry run python worker/main.py
+    volumes:
+      - ./worker:/app
+    depends_on:
+      - rabbitmq
+      - redis
+      - postgres
+    env_file:
+      - .env
   sender:
     build:
       context: ./sender
