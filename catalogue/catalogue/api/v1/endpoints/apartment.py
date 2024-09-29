@@ -1,24 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Annotated
-from catalogue.query import build_query
-from pymongo.database import Database
-from catalogue.db import get_db
+from catalogue.query import find_properties
+from sqlalchemy.orm import Session
+from subscriptions.api.v1.dependencies import get_db
 from catalogue.schemas.apartment import ApartmentParams, ApartmentRead
 
 router = APIRouter(prefix="/api/v1/apartments", tags=["apartments"])
 
-Session = Annotated[Database, Depends(get_db)]
+Session = Annotated[Session, Depends(get_db)]
 
 
 @router.post("/", response_model=list[ApartmentRead])
 async def get_apartments(params: ApartmentParams, db: Session):
-    query = build_query(params)
-    collection = params.city
-    documents = list(db[collection].find(query))
-
-    if not documents:
-        raise HTTPException(
-            status_code=404, detail="No apartments found matching the criteria."
-        )
-
-    return [ApartmentRead(**document) for document in documents]
+    pass

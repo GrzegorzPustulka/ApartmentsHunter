@@ -134,7 +134,7 @@ pymongo = "^4.8.0"
 type = "git"
 url = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git"
 reference = "HEAD"
-resolved_reference = "b4fb32617d2f9422788075d614e12386213ceeb1"
+resolved_reference = "0ead2a087ad79f6014bd006dff05d5f032472f85"
 subdirectory = "catalogue"
 
 [[package]]
