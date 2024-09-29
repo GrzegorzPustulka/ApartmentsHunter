@@ -124,6 +124,19 @@ services:
       - postgres
     env_file:
       - .env
+  catalogue:
+    build:
+      context: ./catalogue
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    container_name: catalogue
+    volumes:
+      - ./catalogue:/app
+    depends_on:
+      - postgres
+    env_file:
+      - .env
 
   postgres:
     image: postgres:13

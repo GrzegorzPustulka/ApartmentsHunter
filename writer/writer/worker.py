@@ -10,6 +10,8 @@ from subscriptions.repository.subscriptions import (
     subscription as subscription_repository,
 )
 from writer.repositories.apartments import apartment_repository
+from catalogue.query import find_properties
+from catalogue.schemas.apartment import ApartmentParams
 
 
 def process_notification(notify) -> None:
@@ -17,22 +19,17 @@ def process_notification(notify) -> None:
 
     with SessionLocal() as session:
         apartment = apartment_repository.get_by_id(session, id)
-        # subscriptions = subscription_repository.get_all(session)
-        # active_subscriptions = [sub for sub in subscriptions if sub.status == "active"]
-        # if not active_subscriptions:
-        #     return
 
-        # for sub in active_subscriptions:
-        #     params = ApartmentParams(**sub.as_dict())
-        #     query = build_query(params)
-        #
-        #     if matches_query(record, query):
-        #         print("ITS WORKS")
-        # WYSYLAMY TUTAJ
-        # data = {
-        #     "notification_destination": "email",
-        #     "user_email": "example@gmail.com",
-        # }
+        subscriptions = subscription_repository.get_all(session)
+        active_subscriptions = [sub for sub in subscriptions if sub.status == "active"]
+        if not active_subscriptions:
+            return
+
+        for sub in active_subscriptions:
+            query = find_properties("apartment", **sub.as_dict())
+            compiled_query = query.compile()
+            print(str(compiled_query))
+
     send_to_sender("example@gmail.com", apartment.as_dict())
 
 
