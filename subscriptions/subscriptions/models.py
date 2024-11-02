@@ -65,6 +65,7 @@ class Apartment(Base):
     district: Mapped[str]
     price: Mapped[float]
     deposit: Mapped[float | None]
+    images_url: Mapped[list[str]] = mapped_column(ARRAY(String))
     standard: Mapped[str]
     bedrooms: Mapped[str]
     title: Mapped[str]
