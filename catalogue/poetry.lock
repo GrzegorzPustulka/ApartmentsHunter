@@ -1418,7 +1418,7 @@ uvicorn = "^0.30.1"
 type = "git"
 url = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git"
 reference = "HEAD"
-resolved_reference = "0ead2a087ad79f6014bd006dff05d5f032472f85"
+resolved_reference = "550b8b59a7de9682b693282b54f7f1844de45d73"
 subdirectory = "subscriptions"
 
 [[package]]

@@ -63,6 +63,7 @@ class SchemaForPricer(BaseModel):
 class SchemaForWriter(BaseModel):
     title: str
     link: str
+    images_url: list[str]
     city: str
     district: str
     date: str

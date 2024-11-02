@@ -76,5 +76,5 @@ class OfferScraperService:
 
     @staticmethod
     def _get_area(listing: Tag) -> str:
-        area_tag = listing.find("span", class_="css-643j0o")
+        area_tag = listing.find("span", class_="css-1cd0guq")
         return area_tag.text

@@ -45,7 +45,7 @@ class ApartmentQueryBuilder(AbstractQueryBuilder):
         }
 
         for key, value in kwargs.items():
-            if value is not None and key in filter_mappings:
+            if value and key in filter_mappings:
                 filter_conditions.append(filter_mappings[key](value))
 
         if filter_conditions:

@@ -13,6 +13,7 @@ class ApartmentCreate(BaseModel):
     link: str
     city: str
     district: str
+    images_url: list[str]
     date: str
     area: float
     building_type: str
