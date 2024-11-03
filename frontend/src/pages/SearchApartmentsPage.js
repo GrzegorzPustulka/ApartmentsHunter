@@ -1,4 +1,3 @@
-// src/pages/SearchApartmentsPage.js
 import React from 'react';
 import Navbar from '../components/layout/Navbar';
 import SearchApartments from '../components/search/SearchApartments';

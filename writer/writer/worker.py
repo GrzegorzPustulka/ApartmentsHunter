@@ -11,7 +11,7 @@ from subscriptions.repository.subscriptions import (
 )
 from writer.repositories.apartments import apartment_repository
 from catalogue.query import find_properties
-from catalogue.schemas.apartment import ApartmentParams
+from catalogue.schemas.apartment import ApartmentParamsBase
 
 
 def process_notification(notify) -> None:

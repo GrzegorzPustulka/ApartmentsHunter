@@ -20,7 +20,7 @@ NumberOfBedrooms = Literal["1 sypialnia", "2 sypialnie", "3 sypialnie", "4 i wiÄ
 Standard = Literal["niski", "normalny", "wysoki"]
 
 
-class ApartmentParams(BaseModel):
+class ApartmentParamsBase(BaseModel):
     city: str
     district: list[str] | None = None
 
@@ -39,7 +39,7 @@ class ApartmentParams(BaseModel):
     standard: list[Standard] | None = None
 
     @model_validator(mode="after")
-    def validate_params(self) -> "ApartmentParams":
+    def validate_params(self) -> "ApartmentParamsBase":
         self.validate_area()
         self.validate_price()
         self.validate_city()
@@ -71,6 +71,13 @@ class ApartmentParams(BaseModel):
             for district in self.district:
                 if district not in get_district(self.city):
                     raise ValueError(f"{district} is not supported for {self.city}.")
+
+
+class ApartmentParams(ApartmentParamsBase):
+    index: int = 0
+    limit: int = 30
+    sort_field: Literal["date", "price", "area"] = "date"
+    sort_direction: Literal["asc", "desc"] = "asc"
 
 
 class ApartmentRead(BaseModel):
