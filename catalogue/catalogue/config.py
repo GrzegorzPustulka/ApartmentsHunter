@@ -3,10 +3,7 @@ from functools import lru_cache
 
 
 class Settings(BaseSettings):
-    mongo_name: str = "catalogue"
-    mongo_port: int = 27017
-    mongo_host: str = "localhost"
-    mongo_uri: str = f"mongodb://{mongo_host}:{mongo_port}/{mongo_name}"
+    frontend_url: str = "http://localhost:3000"
 
 
 @lru_cache()

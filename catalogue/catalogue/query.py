@@ -35,6 +35,8 @@ class ApartmentQueryBuilder(AbstractQueryBuilder):
             "district": lambda value: Apartment.district.in_(value),
             "minimum_price": lambda value: Apartment.price >= value,
             "maximum_price": lambda value: Apartment.price <= value,
+            "minimum_area": lambda value: Apartment.area >= value,
+            "maximum_area": lambda value: Apartment.area <= value,
             "deposit": lambda value: Apartment.deposit <= value,
             "building_type": lambda value: Apartment.building_type.in_(value),
             "number_of_rooms": lambda value: Apartment.number_of_rooms.in_(value),

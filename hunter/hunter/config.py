@@ -15,13 +15,13 @@ class Settings(BaseSettings):
         # "katowice",
     ]
     offer_offset: int = 2
-    offer_limit: int = 13
+    offer_limit: int = 53
 
     # Redis
     redis_host: str = "redis"
     redis_port: int = 6379
     redis_db: int = 0
-    redis_offer_limit: int = 8
+    redis_offer_limit: int = 48
 
     # RabbitMQ
     rabbit_host: str = "rabbitmq"

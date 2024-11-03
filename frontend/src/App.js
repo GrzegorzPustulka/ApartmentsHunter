@@ -11,6 +11,7 @@ import CreateSubscriptionPage from './pages/CreateSubscriptionPage';
 import EditSubscriptionPage from './pages/EditSubscriptionPage';
 import AccountManagementPage from './pages/AccountManagementPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import SearchApartmentsPage from './pages/SearchApartmentsPage';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+          <Route path="/search" element={<SearchApartmentsPage />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/subscriptions" element={<SubscriptionsPage />} />
             <Route path="/subscriptions/create" element={<CreateSubscriptionPage />} />

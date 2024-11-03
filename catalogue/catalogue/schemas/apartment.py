@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from bson import ObjectId
 from pydantic import BaseModel, Field, model_validator, field_validator
 from catalogue.resources.data import get_district, get_city
@@ -72,19 +74,19 @@ class ApartmentParams(BaseModel):
 
 
 class ApartmentRead(BaseModel):
-    id: str = Field(None, alias="_id")
+    id: UUID
     title: str
     link: str
     city: str
     district: str
     area: int | float
     price: int | float
+    images_url: list[str]
+    date: str
     building_type: str
+    deposit: int | float | None = None
     number_of_rooms: str
+    bedrooms: str
     is_furnished: bool
     is_private_offer: bool
-
-    @field_validator("id", mode="before")
-    @classmethod
-    def deserialize_objectid(cls, v: ObjectId) -> str:
-        return str(v)
+    standard: str
