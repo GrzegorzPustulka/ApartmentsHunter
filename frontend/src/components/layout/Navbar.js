@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { FaHome, FaUser, FaSignOutAlt, FaList, FaPlus, FaSignInAlt, FaUserPlus } from 'react-icons/fa';
+import { FaHome, FaUser, FaSignOutAlt, FaList, FaPlus, FaSignInAlt, FaUserPlus, FaSearch } from 'react-icons/fa';
 import { Menu } from 'lucide-react';
 
 const Navbar = () => {
@@ -23,14 +23,22 @@ const Navbar = () => {
     </Link>
   );
 
-  const navItems = token ? [
+  const commonNavItems = [
+    { to: "/search", icon: FaSearch, text: "Wyszukaj mieszkanie" },
+  ];
+
+  const authenticatedNavItems = [
     { to: "/subscriptions", icon: FaList, text: "Moje subskrypcje" },
     { to: "/subscriptions/create", icon: FaPlus, text: "Nowa subskrypcja" },
     { to: "/account", icon: FaUser, text: "Konto" },
-  ] : [
+  ];
+
+  const unauthenticatedNavItems = [
     { to: "/login", icon: FaSignInAlt, text: "Zaloguj się" },
     { to: "/register", icon: FaUserPlus, text: "Zarejestruj się" },
   ];
+
+  const navItems = [...commonNavItems, ...(token ? authenticatedNavItems : unauthenticatedNavItems)];
 
   return (
     <nav className="bg-white shadow-md">
