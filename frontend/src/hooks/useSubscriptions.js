@@ -31,7 +31,6 @@ const useSubscriptions = () => {
       );
     } catch (error) {
       console.error("Błąd podczas zmiany statusu subskrypcji:", error);
-      // Możesz tutaj dodać obsługę błędów, np. wyświetlenie komunikatu dla użytkownika
     }
   };
 
@@ -43,7 +42,6 @@ const useSubscriptions = () => {
       );
     } catch (error) {
       console.error("Błąd podczas usuwania subskrypcji:", error);
-      // Możesz tutaj dodać obsługę błędów, np. wyświetlenie komunikatu dla użytkownika
     }
   };
 

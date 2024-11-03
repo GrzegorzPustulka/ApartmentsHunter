@@ -1,5 +1,15 @@
-// src/components/search/ApartmentCard.js
 import React, { useState } from 'react';
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('pl-PL', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(date);
+};
 
 const ApartmentCard = ({ apartment }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -20,7 +30,6 @@ const ApartmentCard = ({ apartment }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
-      {/* Karuzela zdjęć */}
       <div className="relative h-48">
         {apartment.images_url && apartment.images_url.length > 0 && (
           <>
@@ -34,14 +43,12 @@ const ApartmentCard = ({ apartment }) => {
                 <button
                   onClick={previousImage}
                   className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75 transition-all"
-                  aria-label="Poprzednie zdjęcie"
                 >
                   &#x2190;
                 </button>
                 <button
                   onClick={nextImage}
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75 transition-all"
-                  aria-label="Następne zdjęcie"
                 >
                   &#x2192;
                 </button>
@@ -53,10 +60,9 @@ const ApartmentCard = ({ apartment }) => {
                         e.stopPropagation();
                         setCurrentImageIndex(index);
                       }}
-                      className={`w-2 h-2 rounded-full transition-colors ${
+                      className={`w-2 h-2 rounded-full ${
                         index === currentImageIndex ? 'bg-white' : 'bg-white bg-opacity-50'
                       }`}
-                      aria-label={`Przejdź do zdjęcia ${index + 1}`}
                     />
                   ))}
                 </div>
@@ -66,14 +72,13 @@ const ApartmentCard = ({ apartment }) => {
         )}
       </div>
 
-      {/* Informacje o mieszkaniu */}
       <div className="p-4 flex-grow flex flex-col">
         <div className="flex justify-between items-start mb-2">
           <h3 className="text-lg font-semibold text-gray-900 flex-grow">
             {apartment.title}
           </h3>
           <span className="text-sm text-gray-500 whitespace-nowrap ml-2">
-            {apartment.date}
+            {formatDate(apartment.date)}
           </span>
         </div>
 
@@ -120,7 +125,6 @@ const ApartmentCard = ({ apartment }) => {
           )}
         </div>
 
-        {/* Przycisk zawsze na dole */}
         <div className="mt-auto">
           <a
             href={apartment.link}

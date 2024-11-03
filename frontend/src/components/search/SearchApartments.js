@@ -1,4 +1,3 @@
-// src/components/search/SearchApartments.js
 import React, { useState, useEffect } from 'react';
 import { FaSearch, FaFilter } from 'react-icons/fa';
 import ApartmentCard from './ApartmentCard';
@@ -24,19 +23,33 @@ const SearchApartments = () => {
   const [apartments, setApartments] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [sortParams, setSortParams] = useState({
+    index: 0,
+    limit: 30,
+    sort_field: "date",
+    sort_direction: "desc"
+  });
+
   const API_URL = 'http://127.0.0.1:8080/api/v1/apartments';
 
   useEffect(() => {
-    fetchAllApartments();
-  }, []);
-
-  const fetchAllApartments = async () => {
+  const fetchInitialApartments = async () => {
     setLoading(true);
     try {
-      const response = await fetch(API_URL, {
+      const queryParams = new URLSearchParams({
+        index: sortParams.index.toString(),
+        limit: sortParams.limit.toString(),
+        sort_field: sortParams.sort_field,
+        sort_direction: sortParams.sort_direction
+      });
+
+      const response = await fetch(`${API_URL}?${queryParams}`, {
+        method: 'GET',
         headers: {
           'Accept': 'application/json',
-        }
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
       });
 
       if (!response.ok) {
@@ -56,17 +69,24 @@ const SearchApartments = () => {
     }
   };
 
-  const districtOptions = {
-    Kraków: ["Stare Miasto", "Grzegórzki", "Prądnik Czerwony", "Prądnik Biały", "Krowodrza",
-             "Bronowice", "Zwierzyniec", "Dębniki", "Łagiewniki-Borek Fałęcki", "Swoszowice",
-             "Podgórze Duchackie", "Bieżanów-Prokocim", "Podgórze", "Czyżyny", "Mistrzejowice",
-             "Bieńczyce", "Wzgórza Krzesławickie", "Nowa Huta"],
+  fetchInitialApartments();
+}, [sortParams]);
+
+  const handlePageChange = (newIndex) => {
+    setSortParams(prev => ({
+      ...prev,
+      index: newIndex
+    }));
   };
 
-  const buildingTypes = ["Blok", "Kamienica", "Dom wolnostojący", "Szeregowiec", "Apartamentowiec", "Loft", "Pozostałe"];
-  const roomOptions = ["1 pokój", "2 pokoje", "3 pokoje", "4 i więcej"];
-  const standardOptions = ["niski", "normalny", "wysoki"];
-  const bedroomOptions = ["1 sypialnia", "2 sypialnie", "3 sypialnie", "4 i więcej"];
+  const handleSortChange = (field) => {
+    setSortParams(prev => ({
+      ...prev,
+      sort_field: field,
+      sort_direction: prev.sort_field === field && prev.sort_direction === 'asc' ? 'desc' : 'asc',
+      index: 0
+    }));
+  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -85,47 +105,67 @@ const SearchApartments = () => {
     }));
   };
 
-  const searchApartments = async () => {
-    setLoading(true);
-    try {
-      const cleanFilters = Object.fromEntries(
-        Object.entries(filters).filter(([_, value]) => {
-          if (Array.isArray(value)) {
-            return value.length > 0;
-          }
-          return value !== '' && value !== null;
-        })
-      );
-
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(cleanFilters)
-      });
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          setApartments([]);
-          return;
+const searchApartments = async () => {
+  setLoading(true);
+  try {
+    const cleanFilters = Object.fromEntries(
+      Object.entries(filters).filter(([_, value]) => {
+        if (Array.isArray(value)) {
+          return value.length > 0;
         }
-        throw new Error('Nie udało się wyszukać mieszkań');
-      }
+        return value !== '' && value !== null && value !== undefined;
+      })
+    );
 
-      const data = await response.json();
-      setApartments(Array.isArray(data) ? data : [data]);
-    } catch (error) {
-      console.error('Błąd podczas wyszukiwania:', error);
-      setApartments([]);
-    } finally {
-      setLoading(false);
+    if (cleanFilters.minimum_price) cleanFilters.minimum_price = Number(cleanFilters.minimum_price);
+    if (cleanFilters.maximum_price) cleanFilters.maximum_price = Number(cleanFilters.maximum_price);
+    if (cleanFilters.minimum_area) cleanFilters.minimum_area = Number(cleanFilters.minimum_area);
+    if (cleanFilters.maximum_area) cleanFilters.maximum_area = Number(cleanFilters.maximum_area);
+    if (cleanFilters.deposit) cleanFilters.deposit = Number(cleanFilters.deposit);
+
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify(cleanFilters)
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        setApartments([]);
+        return;
+      }
+      throw new Error('Nie udało się wyszukać mieszkań');
     }
+
+    const data = await response.json();
+    setApartments(Array.isArray(data) ? data : [data]);
+  } catch (error) {
+    console.error('Błąd podczas wyszukiwania:', error);
+    setApartments([]);
+  } finally {
+    setLoading(false);
+  }
+};
+
+  const districtOptions = {
+    Kraków: ["Stare Miasto", "Grzegórzki", "Prądnik Czerwony", "Prądnik Biały", "Krowodrza",
+             "Bronowice", "Zwierzyniec", "Dębniki", "Łagiewniki-Borek Fałęcki", "Swoszowice",
+             "Podgórze Duchackie", "Bieżanów-Prokocim", "Podgórze", "Czyżyny", "Mistrzejowice",
+             "Bieńczyce", "Wzgórza Krzesławickie", "Nowa Huta"],
   };
+
+  const buildingTypes = ["Blok", "Kamienica", "Dom wolnostojący", "Szeregowiec", "Apartamentowiec", "Loft", "Pozostałe"];
+  const roomOptions = ["1 pokój", "2 pokoje", "3 pokoje", "4 i więcej"];
+  const standardOptions = ["niski", "normalny", "wysoki"];
+  const bedroomOptions = ["1 sypialnia", "2 sypialnie", "3 sypialnie", "4 i więcej"];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Nagłówek i przyciski sortowania */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold text-gray-900">Wyszukiwarka mieszkań</h2>
@@ -138,6 +178,36 @@ const SearchApartments = () => {
           </button>
         </div>
 
+        {/* Przyciski sortowania */}
+        <div className="mb-4 flex flex-col sm:flex-row justify-between items-center">
+          <div className="flex space-x-4 mb-4 sm:mb-0">
+            <button
+              onClick={() => handleSortChange('date')}
+              className={`px-3 py-1 rounded ${
+                sortParams.sort_field === 'date' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+              }`}
+            >
+              Data {sortParams.sort_field === 'date' && (sortParams.sort_direction === 'asc' ? '↑' : '↓')}
+            </button>
+            <button
+              onClick={() => handleSortChange('price')}
+              className={`px-3 py-1 rounded ${
+                sortParams.sort_field === 'price' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+              }`}
+            >
+              Cena {sortParams.sort_field === 'price' && (sortParams.sort_direction === 'asc' ? '↑' : '↓')}
+            </button>
+            <button
+              onClick={() => handleSortChange('area')}
+              className={`px-3 py-1 rounded ${
+                sortParams.sort_field === 'area' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+              }`}
+            >
+              Powierzchnia {sortParams.sort_field === 'area' && (sortParams.sort_direction === 'asc' ? '↑' : '↓')}
+            </button>
+          </div>
+        </div>
+      {/* Panel filtrów */}
         {showFilters && (
           <div className="bg-white p-6 rounded-lg shadow-md mb-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -360,6 +430,31 @@ const SearchApartments = () => {
           <ApartmentCard key={apartment.id} apartment={apartment} />
         ))}
       </div>
+
+      {/* Paginacja dla widoku początkowego */}
+      {!loading && apartments.length > 0 && (
+        <div className="mt-6 flex justify-center">
+          <div className="flex space-x-2">
+            <button
+              onClick={() => handlePageChange(Math.max(0, sortParams.index - sortParams.limit))}
+              disabled={sortParams.index === 0 || loading}
+              className="px-4 py-2 border rounded-md disabled:opacity-50 hover:bg-gray-50"
+            >
+              Poprzednia
+            </button>
+            <span className="px-4 py-2">
+              Strona {Math.floor(sortParams.index / sortParams.limit) + 1}
+            </span>
+            <button
+              onClick={() => handlePageChange(sortParams.index + sortParams.limit)}
+              disabled={apartments.length < sortParams.limit || loading}
+              className="px-4 py-2 border rounded-md disabled:opacity-50 hover:bg-gray-50"
+            >
+              Następna
+            </button>
+          </div>
+        </div>
+      )}
 
       {!loading && apartments.length === 0 && (
         <div className="text-center py-12">

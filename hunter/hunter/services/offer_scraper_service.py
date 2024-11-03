@@ -1,3 +1,5 @@
+import datetime
+
 from bs4 import BeautifulSoup
 from bs4.element import ResultSet, Tag
 from hunter.schemas import Offer
@@ -62,11 +64,11 @@ class OfferScraperService:
             raise ValueError("We are not interested in refreshed offers")
         try:
             values = value.split(",")
+            date = str(datetime.datetime.now())
             district = values[1].split(" - ")[0].strip()
-            date = values[1].split(" - ")[1].strip()
         except IndexError:
             district = "unknown"
-            date = value.split(" - ")[1].strip()
+            date = str(datetime.datetime.now())
         return district, date
 
     @staticmethod
