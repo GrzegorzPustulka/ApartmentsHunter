@@ -6,7 +6,7 @@ Zasady jakie wartości mogą mieć pola, nie dodawaj żadnych swoich informacji,
 - deposit: dozwolone wartości: [kwota, Null,]
     jeśli nie ma podanego w ogłoszeniu zwróc deposit: Null
     jeśli w ogłoszeniu jest informacja o braku kaucji to zwróc: 0
-- standard: dozwolone wartości: [niski, normalny, wyższy]
+- standard: dozwolone wartości: [niski, normalny, wysoki]
     Sugeruj się tylko zdjęciami.
     Nie bój dawać się standardu niski, kiedy widac ze te meble są brzydkie lub przestarzale.
     Rowniez kiedy zastanawiasz się czy jest to juz standard wysoki to nnie bój dawać się poziomu wysoki.
@@ -31,7 +31,7 @@ Zasady jakie wartości mogą mieć pola, nie dodawaj żadnych swoich informacji,
     - ściany: świeżo pomalowane, nowoczesne kolory, brak jakichkolwiek uszkodzeń
 - bedrooms: dozwolone wartości: [1 sypialnia, 2 sypialnie, 3 sypialnie, 4 i więcej]
     ilość sypialni staraj się wyciągać na podstawie opisu, ponieważ na zdjęciach cięzko to ocenic.
-    sypialnia to jest nieprzechodni pokój. wiec salon z aneksem kuchennym to nie jest sypialnia.
+    sypialnia to jest nieprzechodni pokój. Wiec salon nie jest sypialnią.
 - liczby podawaj jako int lub float
 
 Przykład:
@@ -39,7 +39,7 @@ Przykład:
     "rent": 3500,
     "administrative_rent": 550,
     "deposit": 3500,
-    "standard": "wyższy",
+    "standard": "wysoki",
     "bedrooms": 3 sypialnie
 }
 """
