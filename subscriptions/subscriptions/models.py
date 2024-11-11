@@ -39,7 +39,7 @@ class Base(DeclarativeBase):
 
 class Subscription(Base):
     notification_destination: Mapped[str]
-    user_email: Mapped[str]
+    notification_endpoint: Mapped[str]
 
     city: Mapped[str] = mapped_column(String(30))
     district: Mapped[list[str] | None] = mapped_column(ARRAY(String))
