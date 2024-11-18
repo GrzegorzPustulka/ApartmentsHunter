@@ -5,6 +5,8 @@ from functools import lru_cache
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env")
+    discord_bot_token: str
+    telegram_bot_token: str
 
     # RabbitMQ
     rabbit_host: str = "rabbitmq"

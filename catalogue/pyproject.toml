@@ -12,6 +12,7 @@ pydantic = "^2.8.2"
 pydantic-settings = "^2.3.4"
 fastapi = "^0.111.0"
 subscriptions = { git = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git", subdirectory = "subscriptions" }
+discord = "^2.3.2"
 
 
 [tool.poetry.group.dev.dependencies]

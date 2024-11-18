@@ -1,0 +1,19 @@
+🏠 **Nowe mieszkanie zgodne z Twoimi kryteriami!**
+
+**Tytuł:** {{ title }}
+📍 **Lokalizacja:** {{ city }}, {{ district }}
+📅 **Data publikacji:** {{ date }}
+💰 **Cena:** {{ price }} PLN
+🔐 **Kaucja:** {{ deposit }}
+⭐ **Standard:** {{ standard }}
+📏 **Powierzchnia:** {{ area }} m²
+🏢 **Typ budynku:** {{ building_type }}
+🚪 **Liczba pokoi:** {{ number_of_rooms }}
+🛏️ **Liczba sypialni:** {{ bedrooms }}
+🪑 **Meble:** {{ "Tak" if is_furnished else "Nie" }}
+👤 **Oferta prywatna:** {{ "Tak" if is_private_offer else "Nie" }}
+
+🔗 **Link do ogłoszenia:** {{ link }}
+
+*Pozdrawiamy,*
+*ApartmentsHunter* 🏃‍♂️

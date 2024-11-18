@@ -4,11 +4,24 @@ from sender.services.email_service import (
     send_apartment_notification,
     send_password_reset_email,
 )
+from sender.services import discord_service, telegram_service
+
+discord_service = discord_service.DiscordService()
+telegram_service = telegram_service.TelegramService()
 
 
 @celery_app.task(name="sender.tasks.send_apartment_notification")
-def send_apartment_notification_task(email: str, data: dict[str, Any]) -> None:
-    send_apartment_notification(email, data)
+def send_apartment_notification_task(data: dict[str, Any]) -> None:
+    notification_destination = data["notification_destination"]
+    if notification_destination == "email":
+        notification_endpoint = data["notification_endpoint"]
+        send_apartment_notification(notification_endpoint, data)
+    elif notification_destination == "discord":
+        notification_endpoint = int(data["notification_endpoint"])
+        discord_service.send_apartment_notification(notification_endpoint, data)
+    elif notification_destination == "telegram":
+        notification_endpoint = int(data["notification_endpoint"])
+        telegram_service.send_apartment_notification(notification_endpoint, data)
 
 
 @celery_app.task(name="sender.tasks.send_password_reset_email")
