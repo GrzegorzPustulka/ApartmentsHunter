@@ -30,7 +30,7 @@ def process_notification(notify) -> None:
             compiled_query = query.compile()
             print(str(compiled_query))
 
-    send_to_sender("example@gmail.com", apartment.as_dict())
+    send_to_sender(apartment.as_dict())
 
 
 def listen_notifications() -> None:
