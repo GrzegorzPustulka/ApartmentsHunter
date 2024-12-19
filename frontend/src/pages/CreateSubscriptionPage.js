@@ -22,7 +22,8 @@ function CreateSubscriptionPage() {
     is_furnished: null,
     is_private_offer: null,
     bedrooms: [],
-    user_email: '',
+    notification_destination: '',
+    notification_endpoint: '',
   });
   const navigate = useNavigate();
 
@@ -313,17 +314,89 @@ function CreateSubscriptionPage() {
             </div>
           </div>
         );
-      case 12:
+case 12:
         return (
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Podaj adres e-mail</h2>
-            <input
-              type="email"
-              name="user_email"
-              value={formData.user_email}
-              onChange={handleInputChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            />
+          <div className="space-y-6">
+            <h2 className="text-xl font-semibold">Wybierz sposób otrzymywania powiadomień</h2>
+
+            <div className="space-y-4">
+              {/* Wybór metody powiadomień */}
+              <div>
+                <select
+                  name="notification_destination"
+                  value={formData.notification_destination}
+                  onChange={handleInputChange}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Wybierz metodę powiadomień</option>
+                  <option value="email">Email</option>
+                  <option value="discord">Discord</option>
+                  <option value="telegram">Telegram</option>
+                </select>
+              </div>
+
+              {/* Pole dla endpointu z odpowiednią instrukcją */}
+              {formData.notification_destination && (
+                <div className="space-y-3">
+                  {formData.notification_destination === 'email' && (
+                    <div>
+                      <input
+                        type="email"
+                        name="notification_endpoint"
+                        value={formData.notification_endpoint}
+                        onChange={handleInputChange}
+                        placeholder="Podaj adres email"
+                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  )}
+
+                  {formData.notification_destination === 'discord' && (
+                    <div>
+                      <div className="bg-gray-50 p-4 rounded-md mb-3">
+                        <h3 className="font-semibold mb-2">Jak uzyskać Discord ID:</h3>
+                        <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600">
+                          <li>Włącz tryb developera w Discord (Ustawienia → Zaawansowane → Tryb developera)</li>
+                          <li>Kliknij prawym przyciskiem na swój profil</li>
+                          <li>Wybierz "Kopiuj ID"</li>
+                          <li>Dodaj naszego bota ApartmentsHunter do znajomych</li>
+                        </ol>
+                      </div>
+                      <input
+                        type="text"
+                        name="notification_endpoint"
+                        value={formData.notification_endpoint}
+                        onChange={handleInputChange}
+                        placeholder="Wklej swoje Discord ID"
+                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  )}
+
+                  {formData.notification_destination === 'telegram' && (
+                    <div>
+                      <div className="bg-gray-50 p-4 rounded-md mb-3">
+                        <h3 className="font-semibold mb-2">Jak uzyskać Telegram Chat ID:</h3>
+                        <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600">
+                          <li>Otwórz Telegram i wyszukaj bota: @ApartmentsHunterBot</li>
+                          <li>Rozpocznij rozmowę z botem (kliknij START)</li>
+                          <li>Bot wyśle ci twój Chat ID</li>
+                          <li>Skopiuj otrzymany Chat ID i wklej poniżej</li>
+                        </ol>
+                      </div>
+                      <input
+                        type="text"
+                        name="notification_endpoint"
+                        value={formData.notification_endpoint}
+                        onChange={handleInputChange}
+                        placeholder="Wklej swoje Telegram Chat ID"
+                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         );
       case 13:
@@ -331,7 +404,6 @@ function CreateSubscriptionPage() {
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Podsumowanie subskrypcji</h2>
             <div className="bg-gray-100 p-4 rounded-md">
-              <p><strong>Email:</strong> {formData.user_email}</p>
               <p><strong>Miasto:</strong> {formData.city}</p>
               <p><strong>Dzielnice:</strong> {formData.district.join(', ')}</p>
               <p><strong>Typ zabudowania:</strong> {formData.building_type.join(', ')}</p>
@@ -343,6 +415,11 @@ function CreateSubscriptionPage() {
               <p><strong>Umeblowane:</strong> {formData.is_furnished ? 'Tak' : 'Nie'}</p>
               <p><strong>Oferta prywatna:</strong> {formData.is_private_offer ? 'Tak' : 'Nie'}</p>
               <p><strong>Liczba sypialni:</strong> {formData.bedrooms.join(', ')}</p>
+              <div className="mt-4">
+                <h3 className="font-semibold">Powiadomienia:</h3>
+                <p><strong>Metoda:</strong> {formData.notification_destination}</p>
+                <p><strong>Adres:</strong> {formData.notification_endpoint}</p>
+              </div>
             </div>
           </div>
         );
@@ -352,11 +429,11 @@ function CreateSubscriptionPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Navbar />
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">Stwórz subskrypcję</h1>
+      <div className="min-h-screen bg-gray-100">
+        <Navbar/>
+        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div className="px-4 py-6 sm:px-0">
+            <h1 className="text-3xl font-bold text-gray-900 mb-6">Stwórz subskrypcję</h1>
           <div className="bg-white shadow-xl rounded-lg overflow-hidden">
             <div className="px-8 py-6">
               <div className="mb-8">

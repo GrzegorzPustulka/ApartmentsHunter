@@ -7,8 +7,8 @@ from subscriptions.models import SubscriptionStatus
 
 
 class SubscriptionCreate(ApartmentParamsBase):
-    notification_destination: Literal["email"] = "email"
-    user_email: EmailStr
+    notification_destination: Literal["email", "discord", "telegram"] = "email"
+    notification_endpoint: str
 
 
 class SubscriptionRead(SubscriptionCreate):

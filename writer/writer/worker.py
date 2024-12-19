@@ -33,28 +33,37 @@ def process_notification(notify) -> None:
     send_to_sender(apartment.as_dict())
 
 
+def handle_keep_alive(conn, cursor, last_keep_alive):
+    if time.time() - last_keep_alive > 300:
+        try:
+            cursor.execute("SELECT 1")
+            conn.commit()
+            return time.time()
+        except (psycopg2.OperationalError, psycopg2.InterfaceError):
+            raise psycopg2.OperationalError("Keep-alive failed")
+    return last_keep_alive
+
+
 def listen_notifications() -> None:
     conn = engine.raw_connection()
     conn.set_isolation_level(0)
     cursor = conn.cursor()
     cursor.execute("LISTEN apartments_channel;")
 
+    last_keep_alive = time.time()
+
     try:
         while True:
-            if select.select([conn], [], [], 5) == ([], [], []):
-                print("No notifications within the last 5 seconds")
-            else:
+            if not select.select([conn], [], [], 5) == ([], [], []):
                 conn.poll()
                 while conn.notifies:
-                    notify = conn.notifies.pop(0)
-                    process_notification(notify)
-    except KeyboardInterrupt:
-        pass
+                    process_notification(conn.notifies.pop(0))
+
+            last_keep_alive = handle_keep_alive(conn, cursor, last_keep_alive)
+
     except (psycopg2.OperationalError, psycopg2.InterfaceError):
-        print("Lost connection to database, retrying...")
         cursor.close()
         conn.close()
-        time.sleep(5)
         listen_notifications()
     finally:
         cursor.close()

@@ -31,9 +31,9 @@ celery_app.conf.task_routes = {
 
 beat_schedule = {}
 for city in settings.cities:
-    beat_schedule[f"scrape-{city}-every-1-minutes"] = {
+    beat_schedule[f"scrape-{city}-every-5-minutes"] = {
         "task": "hunter.tasks.periodic_tasks.scrape_and_send",
-        "schedule": crontab(minute="*/1"),
+        "schedule": crontab(minute="*/5"),
         "args": (city,),
     }
 

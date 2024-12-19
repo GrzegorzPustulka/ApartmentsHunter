@@ -13,15 +13,18 @@ telegram_service = telegram_service.TelegramService()
 @celery_app.task(name="sender.tasks.send_apartment_notification")
 def send_apartment_notification_task(data: dict[str, Any]) -> None:
     notification_destination = data["notification_destination"]
-    if notification_destination == "email":
-        notification_endpoint = data["notification_endpoint"]
-        send_apartment_notification(notification_endpoint, data)
-    elif notification_destination == "discord":
-        notification_endpoint = int(data["notification_endpoint"])
-        discord_service.send_apartment_notification(notification_endpoint, data)
-    elif notification_destination == "telegram":
-        notification_endpoint = int(data["notification_endpoint"])
-        telegram_service.send_apartment_notification(notification_endpoint, data)
+    match notification_destination:
+        case "email":
+            notification_endpoint = data["notification_endpoint"]
+            send_apartment_notification(notification_endpoint, data)
+        case "discord":
+            notification_endpoint = int(data["notification_endpoint"])
+            discord_service.send_apartment_notification(notification_endpoint, data)
+        case "telegram":
+            notification_endpoint = int(data["notification_endpoint"])
+            telegram_service.send_apartment_notification(notification_endpoint, data)
+        case _:
+            raise ValueError("Nieobsługiwany typ powiadomienia")
 
 
 @celery_app.task(name="sender.tasks.send_password_reset_email")

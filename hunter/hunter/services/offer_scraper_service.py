@@ -45,12 +45,12 @@ class OfferScraperService:
 
     @staticmethod
     def _get_title(listing: Tag) -> str:
-        title_tag = listing.find("a", class_="css-z3gu2d")
+        title_tag = listing.find("a", class_="css-qo0cxu")
         return title_tag.text
 
     @staticmethod
     def _get_url(listing: Tag) -> str:
-        url_tag = listing.find("a", class_="css-z3gu2d")
+        url_tag = listing.find("a", class_="css-qo0cxu")
         prefix = "" if "www.otodom.pl" in url_tag["href"] else "https://www.olx.pl"
         return prefix + url_tag["href"] if url_tag else ""
 

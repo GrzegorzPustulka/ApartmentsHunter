@@ -87,11 +87,11 @@ class QueryDirector:
         return self._builder.get_query()
 
 
-def find_properties(property_type: Literal["apartment", "room"], **filters):
+def find_properties(property_type: Literal["apartment"], **filters):
     match property_type:
         case "apartment":
             builder = ApartmentQueryBuilder()
-        case "room":
+        case _:
             pass
 
     director = QueryDirector(builder)

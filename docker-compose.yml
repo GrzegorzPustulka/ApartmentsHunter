@@ -137,6 +137,21 @@ services:
       - postgres
     env_file:
       - .env
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    command: npm start
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - subscriptions
+      - catalogue
 
   postgres:
     image: postgres:13

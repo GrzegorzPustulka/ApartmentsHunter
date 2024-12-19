@@ -296,19 +296,6 @@ const EditSubscriptionPage = () => {
                 ))}
               </div>
             </div>
-
-            <div>
-              <label htmlFor="user_email" className="block text-sm font-medium text-gray-700">Email</label>
-              <input
-                type="email"
-                name="user_email"
-                id="user_email"
-                value={formData.user_email}
-                onChange={handleInputChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
-            </div>
-
             <div>
               <button
                 type="submit"
