@@ -28,8 +28,6 @@ class ApartmentQueryBuilder(AbstractQueryBuilder):
         self.query = select(Apartment)
 
     def apply_filters(self, **kwargs):
-        filter_conditions = []
-
         filter_mappings = {
             "city": lambda value: Apartment.city == value,
             "district": lambda value: Apartment.district.in_(value),
@@ -46,10 +44,12 @@ class ApartmentQueryBuilder(AbstractQueryBuilder):
             "standard": lambda value: Apartment.standard.in_(value),
         }
 
-        index = kwargs.pop("index")
-        limit = kwargs.pop("limit")
-        sort_field = kwargs.pop("sort_field")
-        sort_direction = kwargs.pop("sort_direction")
+        index = kwargs.pop("index", None)
+        limit = kwargs.pop("limit", None)
+        sort_field = kwargs.pop("sort_field", None)
+        sort_direction = kwargs.pop("sort_direction", None)
+
+        filter_conditions = []
 
         for key, value in kwargs.items():
             if value and key in filter_mappings:
@@ -64,12 +64,12 @@ class ApartmentQueryBuilder(AbstractQueryBuilder):
             "area": Apartment.area,
         }
 
-        sort_field_column = sort_field_mapping.get(sort_field)
-        if sort_field_column:
+        if sort_field_column := sort_field_mapping.get(sort_field):
             sort_func = desc if sort_direction == "desc" else asc
             self.query = self.query.order_by(sort_func(sort_field_column))
 
-        self.query = self.query.offset(index).limit(limit)
+        if index or limit:
+            self.query = self.query.offset(index).limit(limit)
 
     def get_query(self):
         built_query = self.query

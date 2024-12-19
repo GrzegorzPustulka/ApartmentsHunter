@@ -12,7 +12,7 @@ router = APIRouter(prefix="/api/v1/apartments", tags=["apartments"])
 Session = Annotated[Session, Depends(get_db)]
 
 
-@router.post("/", response_model=list[ApartmentRead])
+@router.post("", response_model=list[ApartmentRead])
 async def get_apartments(params: ApartmentParams, db: Session) -> list[ApartmentRead]:
     query = find_properties("apartment", **params.model_dump())
     results = db.scalars(query)
