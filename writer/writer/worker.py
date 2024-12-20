@@ -18,8 +18,6 @@ def process_notification(notify) -> None:
     id = UUID(notify.payload)
 
     with SessionLocal() as session:
-        apartment = apartment_repository.get_by_id(session, id)
-
         subscriptions = subscription_repository.get_all(session)
         active_subscriptions = [sub for sub in subscriptions if sub.status == "active"]
         if not active_subscriptions:
@@ -27,10 +25,23 @@ def process_notification(notify) -> None:
 
         for sub in active_subscriptions:
             query = find_properties("apartment", **sub.as_dict())
-            compiled_query = query.compile()
-            print(str(compiled_query))
+            found_apartments = session.scalars(query)
+            for fa in found_apartments:
+                if fa.id == id:
+                    notification_data = {
+                        "apartment": fa.as_dict(),
+                        "notification_endpoint": sub.notification_endpoint,
+                        "notification_destination": sub.notification_destination,
+                    }
+                    send_to_sender([notification_data])
 
-    send_to_sender(apartment.as_dict())
+    # apartment = apartment_repository.get_by_id(session, id)
+    # notification_data = {
+    #     "apartment": fa.as_dict(),
+    #     "notification_endpoint": 7046853048,
+    #     "notification_destination": "telegram",
+    # }
+    # send_to_sender(apartment.as_dict())
 
 
 def handle_keep_alive(conn, cursor, last_keep_alive):

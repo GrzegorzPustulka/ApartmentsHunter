@@ -19,7 +19,7 @@ def process_offer(prices: dict[str, Any], offer: dict[str, Any]) -> None:
 
 
 @celery_app.task()
-def send_to_sender(data: dict[str, Any]) -> None:
+def send_to_sender(data: list[dict[str, Any]]) -> None:
     celery_app.send_task(
         "sender.tasks.send_apartment_notification",
         args=data,

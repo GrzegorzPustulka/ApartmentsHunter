@@ -276,7 +276,7 @@ subscriptions = {git = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git
 type = "git"
 url = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git"
 reference = "HEAD"
-resolved_reference = "6a8e614290e58d05b49e4f816f83caaff36b796d"
+resolved_reference = "8d420ee3f301bca2eca6b998bb841e8fce395324"
 subdirectory = "catalogue"
 
 [[package]]
@@ -1887,7 +1887,7 @@ uvicorn = "^0.30.1"
 type = "git"
 url = "https://github.com/GrzegorzPustulka/ApartmentsHunter.git"
 reference = "HEAD"
-resolved_reference = "6a8e614290e58d05b49e4f816f83caaff36b796d"
+resolved_reference = "8d420ee3f301bca2eca6b998bb841e8fce395324"
 subdirectory = "subscriptions"
 
 [[package]]
